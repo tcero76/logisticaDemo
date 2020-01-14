@@ -1,0 +1,32 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "containerDefinitions": [
+      {
+        "name": "backend",
+        "image": "tcero76/backend",
+        "hostname": "logistica",
+        "essential": true,
+        "portMappings": [
+          {
+            "hostPort": 8080,
+            "containerPort": 8080
+          }
+        ],
+        "memory": 512
+      },
+      {
+        "name": "frontend",
+        "image": "tcero76/frontend",
+        "hostname": "logistica",
+        "essential": true,
+        "portMappings": [
+          {
+            "hostPort": 80,
+            "containerPort": 80
+          }
+        ],
+        "links": ["backend"],
+        "memory": 128
+      }
+    ]
+  }

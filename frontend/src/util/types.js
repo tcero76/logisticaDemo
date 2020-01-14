@@ -1,0 +1,11 @@
+export const SIGN_IN = 'SIGN_IN';
+export const INIT = 'INIT';
+export const ACCESS_TOKEN = 'accessToken';
+export const CURRENT_USER = 'CURRENT_USER';
+export const CURRENT_NAV = 'CURRENT_NAV';
+export const LOGOUT = 'LOGOUT';
+export const SIGN_IN_ERROR = 'SIGN_IN_ERROR';
+export const UBICACIONES = 'UBICACIONES';
+export const SAVE_OREC = 'SAVE_OREC';
+export const FETCH_OREC ='FETCH_OREC';
+export const SEND_UBIC = 'SEND_UBIC';
