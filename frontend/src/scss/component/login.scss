@@ -1,0 +1,48 @@
+.form {
+
+    &__container {
+        background-color:#f1f1f1;
+        width: 45%;
+        height: 16rem;
+        margin: 0 auto;
+        position: relative;
+        border-radius: .2rem;
+        box-shadow: .3rem .5rem 13px 10px rgba( $black, 0.2);
+    }
+
+    &__signin {
+        width: 30%;
+        margin: 8rem auto 5rem;
+        position: relative;
+        @include media-breakpoint-down(md) {
+            width: 50%;
+            margin: 8rem auto 5rem;
+        }
+        @include media-breakpoint-down(sm) {
+            width: 70%;
+            margin: 8rem auto 5rem;
+        }
+        @include media-breakpoint-down(xs) {
+            width: 90%;
+            margin: 8rem auto 5rem;
+        }
+    }
+}
+
+.video {
+    &__container {
+        position: absolute;
+        top:0;
+        left: 0;
+        transform: translate(-25%, -15%);
+        width: 40rem;
+        filter: grayscale(75%) blur(.15rem);
+        background-color: #f1f1f1;
+        z-index: -1;
+    }
+    &-tag {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+    }
+}

@@ -1,0 +1,6 @@
+.card {
+    background-color: rgba($color: $light, $alpha: .5);
+    @include media-breakpoint-down(sm) {
+        height: 25rem;
+    }
+}

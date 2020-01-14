@@ -1,0 +1,70 @@
+version: '3'
+services:
+  db:
+    restart: always
+    volumes:
+      - ./database/mysql:/var/lib/mysql
+      - ./database/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+    image: mysql:5.7
+    ports:
+       - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 'Waves6_'
+      MYSQL_DATABASE: 'logistica'
+      MYSQL_USER: 'tcero'
+      MYSQL_PASSWORD: 'Waves6_'
+    networks:
+      - backend  
+  backend:
+    restart: always
+    volumes:
+      - ./backend/target:/target
+    image: openjdk:8-jdk
+    # build:
+    #   context: backend # Use an image built from the specified dockerfile in the `polling-app-server` directory.
+    #   dockerfile: Dockerfile.dev
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    command: java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -cp /target/classes:/target/dependency/META-INF/*:/target/dependency/BOOT-INF/lib/* com.logistica.demo.LogisticaBackApplication
+    depends_on: 
+      - db # This service depends on mysql. Start that first.
+    environment: # Pass environment variables to the service 
+      MYSQL_DATABASE: logistica  
+      MYSQL_HOST: db
+      MYSQL_PASS: Waves6_
+      MYSQL_PORT: '3306'
+      MYSQL_USER: tcero
+    networks: # Networks to join (Services on the same network can communicate with each other using their name)
+      - backend
+      - frontend
+  frontend:
+    restart: always
+    image: node:12.4.0
+    volumes:
+      - ./frontend/:/app
+    working_dir: /app
+    command: npm start
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - frontend
+  ingress:
+    restart: always
+    image: nginx:1.17
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+    networks: # Networks to join (Services on the same network can communicate with each other using their name)
+      - backend
+      - frontend
+
+# Networks to be created to facilitate communication between containers
+networks:
+  backend:
+  frontend:    

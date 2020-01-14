@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logistica-back
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: logisticaback
+  template:
+    metadata:
+      labels:
+        component: logisticaback
+    spec:
+      containers:
+        - name: logisticaback
+          image: tcero76/backend
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MYSQL_USER
+              value: tcero
+            - name: MYSQL_HOST
+              value: mysql-cluster-ip-service
+            - name: MYSQL_PORT
+              value: '3306'
+            - name: MYSQL_DATABASE
+              value: logistica
+            - name: MYSQL_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mysqlpassword
+                  key: MYSQL_ROOT_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  type: ClusterIP
+  selector:
+    component: logisticaback
+  ports:
+    - port: 8080
+      targetPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: logisticaback-nodeport-service
+  labels:
+    name: mysql
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      nodePort: 30080
+      name: http
+  selector:
+    component: logisticaback
