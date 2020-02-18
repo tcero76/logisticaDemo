@@ -9,3 +9,5 @@ export const UBICACIONES = 'UBICACIONES';
 export const SAVE_OREC = 'SAVE_OREC';
 export const FETCH_OREC ='FETCH_OREC';
 export const SEND_UBIC = 'SEND_UBIC';
+export const FETCH_INVENTARIO = 'FETCH_INVENTARIO';
+export const SEND_DESPACHO = 'SEND_DESPACHO';

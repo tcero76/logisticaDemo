@@ -5,6 +5,7 @@ import history from './util/history';
 import Or from './component/Or';
 import Ubicar from './component/ubicar';
 import Login from './component/login';
+import despacho from './component/despacho';
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { currentUser, logout } from './actions/';
@@ -85,6 +86,7 @@ class App extends React.Component {
           <Header almacen={this.props.usuario.almacen}/>
           <Route path="/Or" exact component={Or}></Route>
           <Route path="/ubicar" exact component={Ubicar}></Route>
+          <Route path="/despacho" exact component={despacho}></Route>
           <div className="base"></div>
         </Router>
     );

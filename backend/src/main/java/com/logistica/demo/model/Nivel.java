@@ -20,7 +20,7 @@ public class Nivel {
 	private String nombre;
 	
 	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
-			CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+			CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
 	@JoinColumn(name = "idzona")
 	private Zona zona;
 	

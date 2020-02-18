@@ -9,7 +9,9 @@ import {
     UBICACIONES,
     SAVE_OREC,
     FETCH_OREC,
-    SEND_UBIC
+    SEND_UBIC,
+    FETCH_INVENTARIO,
+    SEND_DESPACHO,
 } from '../util/types';
 
 export default (state = {}, action) => {
@@ -34,6 +36,10 @@ export default (state = {}, action) => {
             return { ...state, tablaOritemPend: _.mapKeys(action.payload, 'idoritem')}
         case SEND_UBIC:
             return { ...state, tablaOritemPend: _.mapKeys(action.payload, 'idoritem')}
+        case FETCH_INVENTARIO:
+            return { ...state, inventario: action.payload }
+        case SEND_DESPACHO:
+            return { ...state, respuestaOd: action.payload }
         default:
             return state;
     }

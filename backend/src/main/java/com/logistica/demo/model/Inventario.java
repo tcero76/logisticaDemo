@@ -11,6 +11,17 @@ public class Inventario {
 	public Inventario() {
 	}
 
+	public Inventario(Material material, Double cantidad, Pos pos, Date fecharegistro, Usuario usuario, Double cantidadtotal, Oritem oritem, Oditem oditem) {
+		this.material = material;
+		this.cantidad = cantidad;
+		this.pos = pos;
+		this.fecharegistro = fecharegistro;
+		this.usuario = usuario;
+		this.cantidadtotal = cantidadtotal;
+		this.oritem = oritem;
+		this.oditem = oditem;
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idinventario;
@@ -39,6 +50,18 @@ public class Inventario {
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "idoritem")
 	private Oritem oritem;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "idoditem")
+	private Oditem oditem;
+
+	public Oditem getOditem() {
+		return oditem;
+	}
+
+	public void setOditem(Oditem oditem) {
+		this.oditem = oditem;
+	}
 
 	public Oritem getOritem() {
 		return oritem;

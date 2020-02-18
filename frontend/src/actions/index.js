@@ -10,6 +10,8 @@ import {
     SAVE_OREC,
     FETCH_OREC,
     SEND_UBIC,
+    FETCH_INVENTARIO,
+    SEND_DESPACHO,
 } from '../util/types';
 import history from '../util/history';
 import api from '../util/api';
@@ -28,11 +30,11 @@ export const signin = sign_in => async dispatch => {
     .then( async response => {
         await localStorage.setItem(ACCESS_TOKEN, response.data.accessToken);
         await dispatch({ type: SIGN_IN, payload: { ...response.data}});
-        history.push('/');
     })
     .catch( e => {
         dispatch({ type: SIGN_IN_ERROR, payload: e.response.data.message});
     });
+    history.push('/');
 }
 export const currentUser = () => async dispatch => {
     const response = await api().get('/user/usuario');
@@ -70,4 +72,19 @@ export const listarOrec = () => async dispatch => {
 export const enviarUbicacion = (oritem) => async dispatch => {
     var response = await api().patch('/ubicar/ubicacion', oritem);
     dispatch({type: SEND_UBIC, payload: response.data })
+}
+
+export const listarInventario = () => async dispatch => {
+    var response = await api().get('/despacho/inventario');
+    dispatch({type: FETCH_INVENTARIO, payload: response.data});
+}
+
+export const enviarDespacho = (formSubmit) => async dispatch => {
+    await api().post('/despacho/save', formSubmit)
+    .then(async res => {
+        await dispatch({type: SEND_DESPACHO, payload: res.data});
+    })
+    .catch(async res => {
+        await dispatch({type: SEND_DESPACHO, payload: res.response})
+    });
 }

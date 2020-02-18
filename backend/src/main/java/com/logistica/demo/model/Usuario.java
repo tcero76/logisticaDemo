@@ -16,6 +16,10 @@ public class Usuario implements UserDetails {
 	public Usuario() {
 	}
 
+	public Usuario(Integer idusuario) {
+		this.idusuario = idusuario;
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idusuario;
@@ -59,6 +63,12 @@ public class Usuario implements UserDetails {
 	
 	@OneToMany(mappedBy = "usuario")
 	private Set<Inventario> inventarios;
+
+	@OneToMany(mappedBy = "usuario")
+	private Set<Oditem> oditems;
+
+	@OneToMany(mappedBy = "usuario")
+	private Set<Od> ods;
 
 	public Boolean getActivo() {
 		return activo;
