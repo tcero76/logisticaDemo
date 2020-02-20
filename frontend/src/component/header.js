@@ -14,7 +14,7 @@ class Header extends React.Component {
   }
 
   render() {
-    var current = Array(2).fill('nav-link');
+    var current = Array(4).fill('nav-link');
     if(this.props.currentPage>=0) {
       current[this.props.currentPage].concat(' active');
     }
@@ -33,10 +33,16 @@ class Header extends React.Component {
         <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
           <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
             <li className="nav-item">
+              <Link className={current[3]} to="/usuario">Usuario</Link>
+            </li>
+            <li className="nav-item">
               <Link className={current[0]} to="/or">Recepción</Link>
             </li>
             <li className="nav-item">
               <Link className={current[1]} to="/ubicar">Ubicar</Link>
+            </li>
+            <li className="nav-item">
+              <Link className={current[2]} to="/despacho">Despacho</Link>
             </li>
           </ul>
           <ul className="navbar-nav ml-md-auto mt-2 mt-lg-0">

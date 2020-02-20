@@ -11,6 +11,11 @@ public class Almacen {
 	
 	public Almacen() {
 	}
+
+	public Almacen(Integer idalmacen) {
+		this.idalmacen = idalmacen;
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idalmacen;

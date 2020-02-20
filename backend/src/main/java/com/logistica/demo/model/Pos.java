@@ -27,7 +27,7 @@ public class Pos {
 	private Date fecharegistro;
 	
 	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
-			CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+			CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
 	@JoinColumn(name = "idnivel")
 	private Nivel nivel;
 
@@ -98,7 +98,11 @@ public class Pos {
 
 	@Override
 	public String toString() {
-		return "Pos [nombre=" + nombre + "]";
+		return nombre +
+				"/" +
+				getNivel().getNombre() +
+				"/" +
+				getNivel().getZona().getNombre();
 	}
 	
 }

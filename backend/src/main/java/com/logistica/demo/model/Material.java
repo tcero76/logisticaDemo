@@ -41,6 +41,9 @@ public class Material {
 	@JsonIgnore
 	private Set<Inventario> inventarios;
 
+	@OneToMany(mappedBy = "material")
+	private Set<Oditem> oditems;
+
 	public Set<Oritem> getOritems() {
 		return oritems;
 	}
@@ -108,7 +111,7 @@ public class Material {
 
 	@Override
 	public String toString() {
-		return "Material [nombre=" + nombre + "]";
+		return getNombre();
 	}
 	
 	

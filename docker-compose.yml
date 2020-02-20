@@ -7,7 +7,7 @@ services:
       - ./database/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
     image: mysql:5.7
     ports:
-       - "3606:3606"
+       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: 'Waves6_'
       MYSQL_DATABASE: 'logistica'
