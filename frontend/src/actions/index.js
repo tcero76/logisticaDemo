@@ -12,6 +12,7 @@ import {
     SEND_UBIC,
     FETCH_INVENTARIO,
     SEND_DESPACHO,
+    LIST_USUARIO,
 } from '../util/types';
 import history from '../util/history';
 import api from '../util/api';
@@ -87,4 +88,9 @@ export const enviarDespacho = (formSubmit) => async dispatch => {
     .catch(async res => {
         await dispatch({type: SEND_DESPACHO, payload: res.response})
     });
+}
+
+export const listUsuario = () => async dispatch => {
+    var response = await api().get('/user/list');
+    dispatch({ type: LIST_USUARIO, payload: response.data});
 }

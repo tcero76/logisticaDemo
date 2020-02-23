@@ -11,3 +11,4 @@ export const FETCH_OREC ='FETCH_OREC';
 export const SEND_UBIC = 'SEND_UBIC';
 export const FETCH_INVENTARIO = 'FETCH_INVENTARIO';
 export const SEND_DESPACHO = 'SEND_DESPACHO';
+export const LIST_USUARIO = 'LIST_USUARIO';

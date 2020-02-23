@@ -15,7 +15,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.logistica.demo.service.UsuarioService;
+import com.logistica.demo.service.UsuarioServiceImpl;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter  {
 
@@ -23,7 +23,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter  {
     private JwtTokenProvider tokenProvider;
     
     @Autowired
-    private UsuarioService usuarioservice;
+    private UsuarioServiceImpl usuarioservice;
     
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,

@@ -27,7 +27,7 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 
 import com.logistica.demo.security.UnauthorizedHandler;
 import com.logistica.demo.security.JwtAuthenticationFilter;
-import com.logistica.demo.service.UsuarioService;
+import com.logistica.demo.service.UsuarioServiceImpl;
 
 @Configuration
 @EnableGlobalMethodSecurity(
@@ -39,7 +39,7 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 	private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 	
 	@Autowired
-	private UsuarioService usuarioservice;
+	private UsuarioServiceImpl usuarioservice;
 	
 	@Override
 	public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) {

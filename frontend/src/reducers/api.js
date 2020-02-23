@@ -12,6 +12,7 @@ import {
     SEND_UBIC,
     FETCH_INVENTARIO,
     SEND_DESPACHO,
+    LIST_USUARIO,
 } from '../util/types';
 
 export default (state = {}, action) => {
@@ -40,6 +41,8 @@ export default (state = {}, action) => {
             return { ...state, inventario: action.payload }
         case SEND_DESPACHO:
             return { ...state, respuestaOd: action.payload }
+        case LIST_USUARIO:
+            return { ...state, listadoUsuario: action.payload }
         default:
             return state;
     }

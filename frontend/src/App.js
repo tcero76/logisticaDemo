@@ -6,6 +6,8 @@ import Or from './component/Or';
 import Ubicar from './component/ubicar';
 import Login from './component/login';
 import despacho from './component/despacho';
+import almacen from './component/almacen';
+import usuario from './component/usuario';
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { currentUser, logout } from './actions/';
@@ -84,7 +86,8 @@ class App extends React.Component {
     return (
         <Router history={history}>
           <Header almacen={this.props.usuario.almacen}/>
-          <Route path="/usuario" exact component={despacho}></Route>
+          <Route path="/usuario" exact component={usuario}></Route>
+          <Route path="/almacen" exact component={almacen}></Route>
           <Route path="/Or" exact component={Or}></Route>
           <Route path="/ubicar" exact component={Ubicar}></Route>
           <Route path="/despacho" exact component={despacho}></Route>
