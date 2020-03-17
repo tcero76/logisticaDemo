@@ -1,7 +1,10 @@
 package com.logistica.demo.model;
 
+import com.logistica.demo.payload.UbicacionesReq;
+
 import java.util.Date;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,6 +24,18 @@ import javax.validation.constraints.NotNull;
 public class Zona {
 	
 	public Zona() {
+	}
+
+	public Zona(UbicacionesReq ubicacionesReq) {
+		this.nombre = ubicacionesReq.getNombre();
+		this.idzona = ubicacionesReq.getId();
+		this.niveles = ubicacionesReq.getNiveles().stream()
+				.map(Nivel::new)
+				.map(n -> {
+					n.setZona(this);
+					return n;
+				})
+				.collect(Collectors.toSet());
 	}
 
 	@Id
@@ -44,7 +59,8 @@ public class Zona {
 	@Column(name = "fecharegistro")
 	private Date fecharegistro;
 	
-	@OneToMany(mappedBy = "zona", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "zona",cascade = {CascadeType.DETACH, CascadeType.MERGE,
+			CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
 	private Set<Nivel> niveles;
 
 	public Set<Nivel> getNiveles() {

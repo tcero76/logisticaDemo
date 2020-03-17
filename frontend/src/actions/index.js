@@ -13,6 +13,8 @@ import {
     FETCH_INVENTARIO,
     SEND_DESPACHO,
     LIST_USUARIO,
+    UPDATE_ZONAS,
+    SUBMIT_ZONAS
 } from '../util/types';
 import history from '../util/history';
 import api from '../util/api';
@@ -35,7 +37,6 @@ export const signin = sign_in => async dispatch => {
     .catch( e => {
         dispatch({ type: SIGN_IN_ERROR, payload: e.response.data.message});
     });
-    history.push('/');
 }
 export const currentUser = () => async dispatch => {
     const response = await api().get('/user/usuario');
@@ -93,4 +94,20 @@ export const enviarDespacho = (formSubmit) => async dispatch => {
 export const listUsuario = () => async dispatch => {
     var response = await api().get('/user/list');
     dispatch({ type: LIST_USUARIO, payload: response.data});
+}
+
+export const updateZonas = zonas => dispatch => {
+    dispatch({type: UPDATE_ZONAS, payload: zonas})
+}
+
+export const submitZonas = zonas => async dispatch => {
+    await api().post('/almacen/save', zonas)
+        .then(async res => {
+            await dispatch({type: SUBMIT_ZONAS, payload: res});
+        })
+        .catch(async e => {
+            if (e) {
+                await dispatch({type: SUBMIT_ZONAS, payload: e.data});
+            }
+        })
 }

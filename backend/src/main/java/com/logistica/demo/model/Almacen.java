@@ -1,6 +1,9 @@
 package com.logistica.demo.model;
 
+import com.logistica.demo.payload.UbicacionesReq;
+
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -31,13 +34,14 @@ public class Almacen {
 	@Column(name = "fecharegistro")
 	private Date fecharegistro;
 	
-	@OneToMany(mappedBy = "almacen",fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "almacen",cascade = {CascadeType.DETACH, CascadeType.MERGE,
+			CascadeType.PERSIST, CascadeType.REFRESH},fetch = FetchType.EAGER)
 	private Set<Zona> zonas;
 
 	@OneToMany(mappedBy = "almacen")
 	private Set<Usuario> usuarios;
 
-	public Set<Zona> getZonas() {
+    public Set<Zona> getZonas() {
 		return zonas;
 	}
 

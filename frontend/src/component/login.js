@@ -12,10 +12,10 @@ class Login extends React.Component {
     onEnter = e => {
         if(e.key==='Enter'){
             this.sign_in();
-        }        
+        }
     }
 
-    sign_in = () => {
+    sign_in = e => {
         this.props.signin({
             usuario: this.state.usuario,
             clave: this.state.clave,
@@ -25,7 +25,7 @@ class Login extends React.Component {
     render() {
         var error_msg = <div></div>;
         if(this.props.signin_error) {
-            error_msg=  (
+            error_msg = (
             <div className="alert alert-danger" role="alert">
                 {this.props.signin_error}
             </div>);
@@ -55,7 +55,7 @@ class Login extends React.Component {
                 <button onClick={this.sign_in}
                     className="btn btn-lg btn-primary btn-block">
                     Sign in
-                    </button>
+                </button>
             </div>
         );
     }

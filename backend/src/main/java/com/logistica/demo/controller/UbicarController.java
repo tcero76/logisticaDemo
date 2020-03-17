@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import com.logistica.demo.model.*;
 import com.logistica.demo.payload.OritemResponse;
 import com.logistica.demo.payload.UbicacionRequest;
-import com.logistica.demo.payload.UbicacionesResponse;
+import com.logistica.demo.payload.UbicacionesRes;
 import com.logistica.demo.repository.OritemRepository;
 import com.logistica.demo.repository.InventarioRepository;
 import com.logistica.demo.repository.PosRepository;
@@ -55,9 +55,9 @@ public class UbicarController {
 
 	@GetMapping("/ubicaciones")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public List<UbicacionesResponse> getZonas(@AuthenticationPrincipal Usuario usuario) {
-		List<UbicacionesResponse> ubicacionesresp = usuario.getAlmacen().getZonas().stream()
-				.map(UbicacionesResponse::new)
+	public List<UbicacionesRes> getZonas(@AuthenticationPrincipal Usuario usuario) {
+		List<UbicacionesRes> ubicacionesresp = usuario.getAlmacen().getZonas().stream()
+				.map(UbicacionesRes::new)
 				.collect(Collectors.toList());
 		return ubicacionesresp;
 	}

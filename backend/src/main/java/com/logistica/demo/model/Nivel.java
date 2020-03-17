@@ -1,7 +1,11 @@
 package com.logistica.demo.model;
 
+import com.logistica.demo.payload.UbicacionesReq;
+
 import java.util.Date;
 import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.persistence.*;
 
@@ -10,6 +14,18 @@ import javax.persistence.*;
 public class Nivel {
 	
 	public Nivel() {
+	}
+
+	public Nivel (UbicacionesReq.Nivel nivel){
+		this.nombre = nivel.getNombre();
+		this.idnivel = nivel.getId();
+		this.poses = nivel.getPoses().stream()
+				.map(Pos::new)
+				.map(p -> {
+					p.setNivel(this);
+					return p;
+				})
+				.collect(Collectors.toSet());
 	}
 
 	@Id
@@ -32,7 +48,8 @@ public class Nivel {
 	@Column(name = "fecharegistro")
 	private Date fecharegistro;
 	
-	@OneToMany(mappedBy = "nivel", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "nivel", cascade = {CascadeType.DETACH, CascadeType.MERGE,
+			CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
 	private Set<Pos> poses;
 
 	public Set<Pos> getPoses() {

@@ -25,18 +25,29 @@ class Header extends React.Component {
       almacen = this.props.almacen;
     }
     return (
-      <nav className="navbar navbar-expand-md navbar-dark bg-dark mb-4 nav__component">
+      <nav className="navbar navbar-expand-md navbar-dark bg-dark mb-4 nav__component" style={{zIndex: 100}}>
         <span className="navbar-brand">Logisystem</span>
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
           <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
-            <li className="nav-item">
-              <Link className={current[3]} to="/usuario">Usuario</Link>
+            <li className="nav-item dropdown">
+              <a className="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Administrar</a>
+              <div className="dropdown-menu">
+                <Link className="dropdown-item" to="/usuario">Usuario</Link>
+                <Link className="dropdown-item" to="/almacen">Almacen</Link>
+              </div>
             </li>
-            <li className="nav-item">
-              <Link className={current[4]} to="/almacen">Almacen</Link>
+            <li className="nav-item dropdown">
+              <a className="nav-link dropdown-toggle"
+                data-toggle="dropdown"
+                href="#" role="button" aria-haspopup="true"
+                aria-expanded="false">Control de Inventario</a>
+                <div className="dropdown-menu">
+                  <Link className="dropdown-item" to="/MovMat">Movimiento de Material</Link>
+                  <Link className="dropdown-item" to="/inventario">Inventario</Link>
+                </div>
             </li>
             <li className="nav-item">
               <Link className={current[0]} to="/or">Recepción</Link>

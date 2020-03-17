@@ -1,5 +1,7 @@
 package com.logistica.demo.model;
 
+import com.logistica.demo.payload.UbicacionesReq;
+
 import java.util.Date;
 
 import javax.persistence.*;
@@ -9,6 +11,11 @@ import javax.persistence.*;
 public class Pos {
 	
 	public Pos() {
+	}
+
+	public Pos(UbicacionesReq.Nivel.Pos poses) {
+		this.nombre = poses.getNombre();
+		this.idpos = poses.getId();
 	}
 
 	@Id

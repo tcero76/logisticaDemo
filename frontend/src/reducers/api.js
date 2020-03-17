@@ -13,6 +13,8 @@ import {
     FETCH_INVENTARIO,
     SEND_DESPACHO,
     LIST_USUARIO,
+    UPDATE_ZONAS,
+    SUBMIT_ZONAS
 } from '../util/types';
 
 export default (state = {}, action) => {
@@ -43,6 +45,10 @@ export default (state = {}, action) => {
             return { ...state, respuestaOd: action.payload }
         case LIST_USUARIO:
             return { ...state, listadoUsuario: action.payload }
+        case UPDATE_ZONAS:
+            return { ...state, ubicaciones: action.payload }
+        case SUBMIT_ZONAS:
+            return { ...state, respuestaZonas: action.payload }
         default:
             return state;
     }

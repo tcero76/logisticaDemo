@@ -12,3 +12,5 @@ export const SEND_UBIC = 'SEND_UBIC';
 export const FETCH_INVENTARIO = 'FETCH_INVENTARIO';
 export const SEND_DESPACHO = 'SEND_DESPACHO';
 export const LIST_USUARIO = 'LIST_USUARIO';
+export const UPDATE_ZONAS = 'UPDATE_ZONAS';
+export const SUBMIT_ZONAS = 'SUBMIT_ZONAS';

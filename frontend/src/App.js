@@ -8,6 +8,8 @@ import Login from './component/login';
 import despacho from './component/despacho';
 import almacen from './component/almacen';
 import usuario from './component/usuario';
+import movmat from './component/movmat';
+import inventario from './component/inventario'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { currentUser, logout } from './actions/';
@@ -50,7 +52,7 @@ class App extends React.Component {
 
   logout() {
     this.props.logout();
-    this.destroy(); // Cleanup
+    this.destroy();
   }
 
   destroy() {
@@ -62,7 +64,7 @@ class App extends React.Component {
 
   render() {
     if(typeof this.props.usuario==='undefined')
-     return (
+    return (
       <div className="d-flex justify-content-center centrar-vertical">
         <div className="spinner-border" role="status">
             <span className="sr-only">Loading...</span>
@@ -70,14 +72,13 @@ class App extends React.Component {
       </div>
      )
     if (!this.props.usuario.isAuthenticated) {
-      return (
+    return (
           <Router history={history}>
-            <Redirect to="/login" />
+            <Redirect to="/login"/>
             <Route path="/login" component={Login} ></Route>
             <div className="base"></div>
           </Router>
       )
-
     }
     for (var i in this.events) {
       window.addEventListener(this.events[i], this.resetTimeout);
@@ -88,6 +89,8 @@ class App extends React.Component {
           <Header almacen={this.props.usuario.almacen}/>
           <Route path="/usuario" exact component={usuario}></Route>
           <Route path="/almacen" exact component={almacen}></Route>
+          <Route path="/MovMat" exact component={movmat}></Route>
+          <Route path="/inventario" exact component={inventario}></Route>
           <Route path="/Or" exact component={Or}></Route>
           <Route path="/ubicar" exact component={Ubicar}></Route>
           <Route path="/despacho" exact component={despacho}></Route>

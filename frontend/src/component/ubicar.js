@@ -11,7 +11,6 @@ class ubicar extends React.Component {
         ubicacion: false, idoritem: null
     };
 
-
     componentDidMount() {
         this.props.currentNav(1);
         this.props.listarAlmacen();
@@ -205,7 +204,7 @@ class ubicar extends React.Component {
 
     render() {
         return (
-            <div className="container">
+            <div className="container" style={{zIndex: -10}}>
                 <div className="card">
                     <div className="card-body">
                         <h5 className="card-title">Ubicación</h5>
