@@ -26,7 +26,7 @@ services:
     ports:
       - "8080:8080"
       - "5005:5005"
-    command: java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -cp /target/classes:/target/dependency/META-INF/*:/target/dependency/BOOT-INF/lib/* com.logistica.demo.LogisticaBackApplication
+    command: java -Dlogging.config='/target/classes/log4j2.xml' -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -cp /target/classes:/target/dependency/META-INF/*:/target/dependency/BOOT-INF/lib/* com.logistica.demo.LogisticaBackApplication 
     depends_on: 
       - db # This service depends on mysql. Start that first.
     environment: # Pass environment variables to the service 

@@ -4,7 +4,7 @@ export default {
         "date": {
             "short": {
                 "day": "numeric",
-                "month": "long",
+                "month": "2-digit",
                 "year": "numeric"
             }
         },
@@ -23,7 +23,7 @@ export default {
             "CLP": {
                 "style": "currency",
                 "currency": "CLP",
-                "minimumFractionDigits": 0  
+                "currencyDisplay": "code"
             }
         },
         "relative": {

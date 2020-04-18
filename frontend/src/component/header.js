@@ -39,15 +39,8 @@ class Header extends React.Component {
                 <Link className="dropdown-item" to="/almacen">Almacen</Link>
               </div>
             </li>
-            <li className="nav-item dropdown">
-              <a className="nav-link dropdown-toggle"
-                data-toggle="dropdown"
-                href="#" role="button" aria-haspopup="true"
-                aria-expanded="false">Control de Inventario</a>
-                <div className="dropdown-menu">
-                  <Link className="dropdown-item" to="/MovMat">Movimiento de Material</Link>
-                  <Link className="dropdown-item" to="/inventario">Inventario</Link>
-                </div>
+            <li className="nav-item">
+              <Link className={current[3]} to="/MovMat">Movimiento de Material</Link>
             </li>
             <li className="nav-item">
               <Link className={current[0]} to="/or">Recepción</Link>

@@ -57,4 +57,13 @@ public class InventarioDaoImpl implements InventarioDao {
                 .map(i -> (Inventario)i[0])
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Inventario> listarByMaterial(Almacen almacen, Integer idmaterial) {
+        Session ss = em.unwrap(Session.class);
+        String hql = "select i from Inventario i left join i.material m left join fetch i.pos p where m.idmaterial = :idmaterial";
+        return ss.createQuery(hql)
+                .setParameter("idmaterial", idmaterial)
+                .list();
+    }
 }

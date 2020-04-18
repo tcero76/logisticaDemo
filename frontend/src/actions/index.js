@@ -14,7 +14,8 @@ import {
     SEND_DESPACHO,
     LIST_USUARIO,
     UPDATE_ZONAS,
-    SUBMIT_ZONAS
+    SUBMIT_ZONAS,
+    FETCH_MATMOVE,
 } from '../util/types';
 import history from '../util/history';
 import api from '../util/api';
@@ -79,6 +80,11 @@ export const enviarUbicacion = (oritem) => async dispatch => {
 export const listarInventario = () => async dispatch => {
     var response = await api().get('/despacho/inventario');
     dispatch({type: FETCH_INVENTARIO, payload: response.data});
+}
+
+export const listarMovimiento = (idmaterial) => async dispatch => {
+    var resp = await api().post('/informe/movmat', {idmaterial: parseInt(idmaterial)})
+    dispatch({type: FETCH_MATMOVE, payload: resp.data});
 }
 
 export const enviarDespacho = (formSubmit) => async dispatch => {

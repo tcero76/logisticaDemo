@@ -7,6 +7,8 @@ import com.logistica.demo.model.Usuario;
 import com.logistica.demo.service.OrecService;
 import com.logistica.demo.model.Material;
 import com.logistica.demo.repository.MaterialRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +30,8 @@ import javax.validation.Valid;
 @RequestMapping("/material")
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 public class OrController {
+
+	private static final Logger logger = LoggerFactory.getLogger(OrController.class);
 	
 	@Autowired
 	private MaterialRepository materialrepo;
@@ -39,6 +43,7 @@ public class OrController {
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public List<Material> listarMateriales() {
 		List<Material> materiales = materialrepo.findAll();
+		logger.info("Envía materiales");
 		return materiales;
 	}
 

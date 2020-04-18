@@ -28,4 +28,10 @@ public class InventarioServiceImpl implements InventarioService {
     public List<Inventario> listarInventario(Almacen almacen) {
         return inventarioDao.listarInventario(almacen);
     }
+
+    @Override
+    @Transactional
+    public List<Inventario> listarByMaterial(Almacen almacen, Integer idmaterial) {
+        return inventarioDao.listarByMaterial(almacen, idmaterial);
+    }
 }

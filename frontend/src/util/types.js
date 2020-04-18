@@ -14,3 +14,4 @@ export const SEND_DESPACHO = 'SEND_DESPACHO';
 export const LIST_USUARIO = 'LIST_USUARIO';
 export const UPDATE_ZONAS = 'UPDATE_ZONAS';
 export const SUBMIT_ZONAS = 'SUBMIT_ZONAS';
+export const FETCH_MATMOVE = 'FETCH_MATMOVE';

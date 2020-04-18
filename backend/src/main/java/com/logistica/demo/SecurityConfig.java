@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,6 +29,7 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import com.logistica.demo.security.UnauthorizedHandler;
 import com.logistica.demo.security.JwtAuthenticationFilter;
 import com.logistica.demo.service.UsuarioServiceImpl;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @Configuration
 @EnableGlobalMethodSecurity(
@@ -55,10 +57,9 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
     @Autowired
     private UnauthorizedHandler unauthorizedHandler;
     
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter();
-    }
+    @Autowired
+	@Qualifier("JwtAuthenticationFilter")
+    private OncePerRequestFilter jwtAuthenticationFilter;
     
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -82,8 +83,8 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
     
     @Override
 	public void configure(HttpSecurity http) throws Exception {
-        http            
-    	.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+        http
+    	.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 		        .cors().and()
 		        .csrf().disable()
 				.exceptionHandling()
@@ -101,6 +102,7 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 		        .antMatchers("/ubicar/**").permitAll()
 		        .antMatchers("/signin").permitAll()
 		        .antMatchers("/user/usuario").permitAll()
-		        .anyRequest().authenticated();
+		        .anyRequest()
+				.authenticated();
     }
    }

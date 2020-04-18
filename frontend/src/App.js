@@ -13,6 +13,7 @@ import inventario from './component/inventario'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { currentUser, logout } from './actions/';
+import SelMaterial from './component/elements/selMaterial';
 
 class App extends React.Component {
 
@@ -94,6 +95,7 @@ class App extends React.Component {
           <Route path="/Or" exact component={Or}></Route>
           <Route path="/ubicar" exact component={Ubicar}></Route>
           <Route path="/despacho" exact component={despacho}></Route>
+          <Route path="/borrar" exact component={SelMaterial}></Route>
           <div className="base"></div>
         </Router>
     );

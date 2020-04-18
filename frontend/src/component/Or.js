@@ -95,10 +95,14 @@ class Or extends React.Component {
         return (
             <div className="col-md-6 mb-3">
                     <label htmlFor="material">{label}</label>
+
+
                     <select id="material" className={classNam} {...input}>
                         <option key={null} value={0}>Seleccionar</option>
                         {this.props.materiales.map(mat => <option key={mat.idmaterial} value={mat.idmaterial}>{mat.nombre}</option>)}
                     </select>
+
+                    
                     <div className="invalid-feedback">
                         {error}
                     </div>

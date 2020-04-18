@@ -29,6 +29,14 @@ public class DBTest {
     @Autowired
     public InventarioService inventarioService;
 
+    @Test
+    public void InventarioByMaterial() {
+        Integer idmaterial = 1;
+        Almacen almacen = new Almacen(1);
+        List<Inventario> inventarios = inventarioService.listarByMaterial(almacen, idmaterial);
+        assertThat(inventarios, notNullValue());
+    }
+
 /*
 
     @Test

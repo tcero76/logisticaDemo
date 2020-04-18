@@ -11,4 +11,5 @@ public interface InventarioDao {
 
     public Integer ultInventario(Material material, Pos pos);
     public List<Inventario> listarInventario(Almacen almacen);
+    public List<Inventario> listarByMaterial(Almacen almacen, Integer idmaterial);
 }

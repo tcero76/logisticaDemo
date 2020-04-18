@@ -14,7 +14,8 @@ import {
     SEND_DESPACHO,
     LIST_USUARIO,
     UPDATE_ZONAS,
-    SUBMIT_ZONAS
+    SUBMIT_ZONAS,
+    FETCH_MATMOVE
 } from '../util/types';
 
 export default (state = {}, action) => {
@@ -49,6 +50,8 @@ export default (state = {}, action) => {
             return { ...state, ubicaciones: action.payload }
         case SUBMIT_ZONAS:
             return { ...state, respuestaZonas: action.payload }
+        case FETCH_MATMOVE:
+            return { ...state, movimientos: action.payload}
         default:
             return state;
     }
