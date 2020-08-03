@@ -42,7 +42,6 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
-    
 
     public Integer getUserIdFromJWT(String token) {
         Claims claims = Jwts.parser()

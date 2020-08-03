@@ -1,20 +1,29 @@
 import React, { Component } from 'react';
 import { listUsuario } from '../actions';
 import {connect} from 'react-redux';
+import api from '../util/api';
+import _ from 'lodash';
 
-class usuario extends Component {
+class Usuario extends Component {
 
     componentDidMount() {
-        this.props.listUsuario();
+        this.fetchUsuario();
     }
 
-    state = { idusuario: null}
+    state = { idusuario: null, usuarios: null}
+
+    fetchUsuario() {
+        api().get('/usuarios')
+        .then(res => {
+            this.setState({ ...this.state, usuarios: res.data});
+        })
+    }
 
     renderRow() {
-        if(!this.props.listadoUsuario){
+        if(!this.state.usuarios){
             return null;
         }
-        return this.props.listadoUsuario.map(u => {
+        return this.state.usuarios.map(u => {
             return (<tr key={u.idUsuario}>
                     <td>{u.idUsuario}</td>
                     <td>{u.nombre}</td>
@@ -46,9 +55,4 @@ class usuario extends Component {
     }
 }
 
-const mapStateToProps = state => {
-    console.log(state.api.listadoUsuario)
-    return {listadoUsuario: state.api.listadoUsuario}
-}
-
-export default connect(mapStateToProps, { listUsuario })(usuario);
+export default Usuario;

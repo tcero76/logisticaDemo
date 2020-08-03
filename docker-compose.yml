@@ -30,6 +30,7 @@ services:
     depends_on: 
       - db # This service depends on mysql. Start that first.
     environment: # Pass environment variables to the service 
+      TZ: America/Santiago
       MYSQL_DATABASE: logistica  
       MYSQL_HOST: db
       MYSQL_PASS: Waves6_

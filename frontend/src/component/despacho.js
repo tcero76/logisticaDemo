@@ -1,121 +1,150 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { listarInventario,enviarDespacho } from '../actions/';
-import { Field, reduxForm } from 'redux-form';
+import SelMaterial from './elements/selMaterial'
 import NumberFormat from 'react-number-format';
+import api from '../util/api';
+import _ from 'lodash';
 
-class despacho extends Component {
+class Despacho extends Component {
 
-    state = {inventario: {}}
+    state = {inventario: {}, touched: {}, error: {}, rows: null}
 
-    componentDidMount() {
-        this.props.listarInventario();
+    onSubmit() {
+            if(_.isEmpty(this.items)) {
+                return null;
+            }
+            var items = Object.values(this.items)
+                .map(i => { return {cantidadDespacho:i.cantidadDespacho, idmaterial: i.material.idmaterial, idpos: i.pos.idpos}})
+                api().post('/od', items)
+                    .then(res => {
+                        this.setState({ ...this.state, rows: res.data})
+                    })
+                    .catch(e => {
+                        this.setState({ ...this.state, errorResponse: e.response})
+                    });
+            // window.location.href = '/despacho';
+        }
+
+    onBlurCantidad(e) {
+        var idInventario = e.target.getAttribute('data-key');
+        var touched = this.state.touched;
+        touched[idInventario] = true;
+        this.setState({touched});
+        this.testErrorCantidad(e);
     }
 
-    onSubmit = formValues => {
-        var inventarioselect = Object.getOwnPropertyNames(formValues);
-        var formSubmit = this.props.inventario
-            .filter(i => inventarioselect.includes('idinv' + i.idInventario))
-            .map(i => {
-                return {material: i.material, cantidad: i.cantidad, pos: i.pos, idInventario: i.idInventario, cantidadDespacho: formValues['idinv'+i.idInventario]}
-            });
-            this.props.enviarDespacho(formSubmit);
-            window.location.href = '/despacho';
-        }
+    onChangeCantidad(e) {
+        var idInventario = e.target.getAttribute('data-key');
+        var item = _.mapKeys([{...this.state.rows[idInventario],
+            cantidadDespacho:parseFloat(e.target.value.replace(',','.')) }],
+            'idInventario');
+        this.items = { ...this.items, ...item }
+        console.log(this.items);
+        this.testErrorCantidad(e);
+    }
 
-    renderInput({input , meta: {touched, error}}) {
-        var classNam='form-control';
-        if(touched) {
-            classNam = `form-control ${error ? ' is-invalid' : ' is-valid'}`;
+    testErrorCantidad(e) {
+        var idInventario = e.target.getAttribute('data-key');
+        var error = this.state.error;
+        if(e.target.value == '')  {
+            error[idInventario] = 'Se debe ingresar un valor';
+            this.setState({error})
+        } else if(this.items[idInventario].cantidadDespacho>this.items[idInventario].cantidad) {
+            error[idInventario] = 'Sin Stock';
+            this.setState({error})
+        } else {
+            error[idInventario] = false;
+            this.setState({error})
         }
-        return (
-            <div>
-                <NumberFormat style={{width:'85px'}} className={classNam} {...input} autoComplete="off"
-                    thousandSeparator="." decimalSeparator="," ></NumberFormat>
-                    <div className="invalid-feedback">
-                        {error}
+    }
+
+    renderInput(i) {
+        var classNam='form-control';
+        if(this.state.touched[i.idInventario]) {
+            classNam = `form-control ${this.state.error[i.idInventario] ? ' is-invalid' : ' is-valid'}`;
+        }
+        return (<NumberFormat data-key={i.idInventario}
+                    stock={i.cantidad}
+                    onBlur={(e) => this.onBlurCantidad(e)}
+                    onChange={e => this.onChangeCantidad(e)}
+                    className={classNam}
+                    autoComplete="off"
+                    thousandSeparator="."
+                    decimalSeparator=","/>
+                )
+    }
+
+    renderContent() {
+        var rows = Object.values(this.state.rows);
+        return (rows.map(  i => {
+            return( <a key={i.idInventario} href="#" data-key={i.idInventario}
+                        className="list-group-item list-group-item-action ">
+                        <div className="d-flex w-100 justify-content-between">
+                        <h5 className="mb-1">Cantidad Despacho</h5>
+                        <small><strong>Stock: </strong>{i.cantidad}</small>
+                        </div>
+                        {this.renderInput(i)}
+                        <div className="invalid-feedback">
+                            {this.state.error[i.idInventario]}
+                        </div>
+                        <small>Ubicación: {i.pos.nombre}</small>
+                    </a>
+                    );
+        })
+    );
+    }
+
+    fetchInventario(idmaterial) {
+        api().get(`/material/${idmaterial}/inventarioslast/`)
+            .then(res => {
+                this.setState({rows: _.mapKeys(res.data,'idInventario')})
+            }).catch(e => {
+                this.setState({ ...this.state, errorResponse: e.response});
+            });
+    }
+
+    renderMaterial() {
+        var callbackValue = (value) => {
+            if(value.idmaterial) {
+                this.fetchInventario(value.idmaterial);
+            }
+        }
+        return (<div className="form-row">
+                    <div className="col-md-12 mb-3">
+                        <SelMaterial label="Buscar" 
+                                        value={callbackValue}
+                                        error="Se debe ingresar un valor"
+                                        ok="Ok"/>
                     </div>
-                    <div className="valid-feedback">
-                        Ok.
-                    </div>
-            </div>
+                </div>
         );
     }
 
-    renderRow() {
-        if(!this.props.inventario)         {
-            return <tr></tr>
-        }
-        return ( this.props.inventario.map( i => {
-                    return(
-                        <tr key={i.idInventario}>
-                            <td>{i.material.idmaterial}</td>
-                            <td>{i.material.nombre}</td>
-                            <td>{i.cantidad}</td>
-                            <td>{i.pos.nombre}</td>
-                            <td><Field name={'idinv'+i.idInventario} component={this.renderInput}></Field></td>
-                        </tr>
-                        );
-                })
-            );
-    }
 
-    renderTable() {
-        return (<table className="table mt-3">
-                    <thead>
-                        <tr>
-                            <th>idMaterial</th>
-                            <th>Material</th>
-                            <th>Cantidad Disponible</th>
-                            <th>Ubicación</th>
-                            <th>Cantidad Solicitada</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.renderRow()}
-                    </tbody>
-                </table>);
+    renderLista() {
+        if(!this.state.rows){
+            return null;
+        }
+        return (<div className="list-group">
+                    {this.renderContent()}
+                </div>);
     }
 
     render() {
         return (<div className="container">
                     <h1>Despacho</h1>
-                    <form onSubmit={this.props.handleSubmit(this.onSubmit)}>
-                        {this.renderTable()}
-                        <button className="btn btn-primary">Guardar</button>
+                    {this.renderMaterial()}
+                    <form className="col-lg-6">
+                        {this.renderLista()}
+                        <button className="btn btn-primary"
+                            onClick={e=>this.onSubmit()}>Guardar</button>
                     </form>
                 </div>);
     }
 }
 
 const mapStateToProps = state => {
-    return {inventario: state.api.inventario,
-           respuestaOd: state.api.respuestaOd}
+    return {items: state.api.items}
 }
 
-const validate = (formValues, props) => {
-    var errors = {};
-    if(!props.inventario) {
-        return errors;
-    }
-    for (const campo in formValues) {
-        if (formValues.hasOwnProperty(campo)) {
-            const valor = formValues[campo];
-            var inv =   props.inventario.find(i => ('idinv'+i.idInventario)===campo);
-            if (inv.cantidad<valor) {
-                errors[campo]='Sin Stock';
-            }
-            if(valor<0) {
-                errors[campo]='Debe ser positivo';
-            }
-        }
-    }
-    return errors;
-}
 
-const DespachoForm = reduxForm({
-    form:'despachoForm',
-    validate
-})(despacho);
-
-export default connect(mapStateToProps, { listarInventario, enviarDespacho })(DespachoForm);
+export default Despacho;

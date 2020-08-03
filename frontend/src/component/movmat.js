@@ -1,123 +1,99 @@
 import React, { Component } from 'react';
-import { init, listarMovimiento } from '../actions/index';
-import { connect } from 'react-redux';
-import {reduxForm, Field} from 'redux-form';
-import intlData from '../util/intlData';
-import {IntlProvider, FormattedTime, FormattedNumber} from 'react-intl';
+import {FormattedTime, FormattedNumber} from 'react-intl';
+import Tabla from './elements/tabla';
+import SelMaterial from './elements/selMaterial';
+import api from '../util/api';
 
-class movmat extends Component {
+class Movmat extends Component {
 
-    state = {idmaterial: null }
+    constructor(props) {
+        super(props);
+        this.materialElement = React.createRef();
+    }
+
+    state = {errorResponse: null, rows: null, page: null, totalPage: null, material:null }
 
     componentDidMount() {
-        this.props.init();
+        this.materialElement.current.resetMaterial();
     }
 
-    renderOption() {
-        if(!this.props.materiales){
-            return null;
+    SubmitMovMat(idmaterial, page) {
+        if(this.state.material) {
+            api().get(`/material/${idmaterial}/inventarios?page=${page}&rows=8`)
+                .then(res => {
+                    this.setState({rows: res.data.list, page: res.data.page, totalPage: res.data.totalPage})
+                }).catch(e => {
+                    this.setState({errorResponse:e.response})
+                })
         }
-        return this.props.materiales.map(m => {
-            return (<option key={m.idmaterial} value={m.idmaterial}>
-                        {m.nombre}
-                    </option>)
-        });
     }
 
-    renderRow() {
-        if(!this.props.movimientos){
-            return null;
+    renderMaterial() {
+        var callbackValue = (value) => {
+            this.setState({...this.state, material:value});
+            this.SubmitMovMat(value.idmaterial,1);
         }
-        return this.props.movimientos.map(m => {
-            return (<tr key={m.idinventario}>
-                        <td>{m.idinventario}</td>
-                        <td>{m.nombre}</td>
-                        <td><FormattedNumber value={m.cantidad}></FormattedNumber> {m.positivo?<i class="fas fa-arrow-circle-up" style={{color:'blue'}}></i>:<i class="fas fa-arrow-circle-down" style={{color:'red'}}></i>}</td>
-                        <td>{m.pos}</td>
-                        <td><FormattedTime format="hhmm" value={m.fecharegistro}></FormattedTime></td>
-                        <td><b>{m.total}</b></td>
-                    </tr>);
-        })
-    }
-
-    renderTable(){
-        return (<table className="table text-center">
-                <thead>
-                    <tr>
-                        <th>id</th>
-                        <th>Material</th>
-                        <th>Cantidad</th>
-                        <th>Ubicación</th>
-                        <th>Fecha</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <IntlProvider locale="es" {...intlData}>
-                        {this.renderRow()}
-                    </IntlProvider>
-                </tbody>
-        </table>);
-    }
-
-    renderMaterial = ({input, label, meta: {touched, error}}) => {
         return (
             <div className="form-row">
-                <label htmlFor="idmaterial">{label}</label>
-                <select id="idmaterial"
-                    className="form-control mb-2"
-                    value={this.state.idmaterial}
-                    {...input}>
-                    <option key="0" value="0">Seleccionar</option>
-                    {this.renderOption()}
-                </select>
+                <div className="col-md-12 mb-3">
+                    <SelMaterial label="Seleccionar"
+                        ref={this.materialElement}
+                        value={callbackValue}
+                        error="Se debe ingresar un valor"
+                        ok="Ok"/>
+                </div>
             </div>
         );
     }
 
-    Submit = formValues => {
-        this.props.listarMovimiento(formValues.material);
+    renderHeaders() {
+        return ( <tr>
+                    <th>id</th>
+                    <th>Material</th>
+                    <th>Cantidad</th>
+                    <th>Ubicación</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                </tr>)
+    }
+
+    renderRows = () => {
+        var rows = this.state.rows;
+        return rows.map(m => {
+                return (<tr key={m.idinventario}>
+                            <td>{m.idinventario}</td>
+                            <td>{m.nombre}</td>
+                            <td><FormattedNumber value={m.cantidad}></FormattedNumber> {m.positivo?<i class="fas fa-arrow-circle-up" style={{color:'blue'}}></i>:<i class="fas fa-arrow-circle-down" style={{color:'red'}}></i>}</td>
+                            <td>{m.pos}</td>
+                            <td><FormattedTime format="hhmm" value={m.fecharegistro}></FormattedTime></td>
+                            <td><b>{m.total}</b></td>
+                        </tr>);
+            });
     }
 
     render() {
         return (<div className="container">
                     <div className="row mb-3">
                         <div className="col-md-5">
-                            <div className="card">
+                            <div className="card card__movmat">
                                 <div className="card-header">
                                     Buscar
                                 </div>
                                 <div className="card-body">
-                                    <form  onSubmit={this.props.handleSubmit(this.Submit)}>
-                                        <Field name="material" label="Material"
-                                        component={this.renderMaterial}></Field>
-                                        <button type="submit" className="btn btn-primary">
-                                            Consultar
-                                        </button>
+                                    <form>
+                                        {this.renderMaterial()}
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div className="row">
-                        {this.renderTable()}
-                    </div>
+                    <Tabla rows={this.state.rows}
+                        totalPage={this.state.totalPage}
+                        renderHeaders={this.renderHeaders()}
+                        renderRows={this.renderRows}
+                        fetchData={(page) => this.SubmitMovMat(this.state.material.idmaterial,page)}/>
                 </div>);
     }
 }
 
-const mapStateToProps = state => {
-    if(!state.api.materiales){
-        return {}
-    }
-    return {
-        materiales: Object.values(state.api.materiales),
-        movimientos: state.api.movimientos,
-    }
-}
-
-const form = reduxForm({
-    form:'movmat'
-})(movmat);
-
-export default connect(mapStateToProps, { init, listarMovimiento })(form);
+export default Movmat;

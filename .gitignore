@@ -33,7 +33,7 @@ target/
 #deploy
 /frontend/node_modules
 /backend/target
-/database
+database/
 
 ### STS ###
 .apt_generated

@@ -17,13 +17,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/usuarios")
 public class UsuarioController {
 
 	@Autowired
 	public UsuarioServiceImpl usuarioService;
 
-	@GetMapping("/list")
+	@GetMapping
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public List<UsuarioListResponse> listarUsuarios() {
 		List<UsuarioListResponse> usuarioListResponse = usuarioService.listUsuario().stream()
@@ -38,7 +38,7 @@ public class UsuarioController {
 		return ResponseEntity.ok(true);
 	}
 
-	@GetMapping("/usuario")
+	@GetMapping("/current")
 	public CurrentUserResponse currentUser(@AuthenticationPrincipal Usuario usuario) {
 		if(usuario==null) {
 			return new CurrentUserResponse(null, null, false, null);

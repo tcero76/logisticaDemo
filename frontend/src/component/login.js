@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { signin, currentUser } from '../actions';
+import Msg from './elements/msg';
 
 class Login extends React.Component {
 
@@ -23,30 +24,25 @@ class Login extends React.Component {
     }
 
     render() {
-        var error_msg = <div></div>;
-        if(this.props.signin_error) {
-            error_msg = (
-            <div className="alert alert-danger" role="alert">
-                {this.props.signin_error}
-            </div>);
-        }
         return (
             <div className="form__signin">
-                {error_msg}
+                <Msg/>
                 <form>
                     <h1 className="h3 mb-3 pt-3 font-weight-bolder">Ingrese Usuario</h1>
                     <div className="mb-3">
                         <label htmlFor="usuario" className="sr-only">Usuario</label>
                         <input type="text" autoComplete="off"
                             value={this.state.usuario}
-                            onChange={e => this.setState({ ...this.state, usuario: e.target.value })}
-                            name="usuario" id="usuario" className="form-control"
-                            placeholder="Usuario" onKeyPress={this.onEnter}
+                            onChange={e => this.setState({ ...this.state, usuario: e.target.value, showMsg:false })}
+                            name="usuario" id="usuario"
+                            className="form-control mb-1"
+                            placeholder="Usuario"
+                            onKeyPress={this.onEnter}
                             required autoFocus></input>
                         <label htmlFor="clave" className="sr-only">Clave</label>
                         <input type="password" autoComplete="off"
                             value={this.state.clave}
-                            onChange={e => this.setState({ ...this.state, clave: e.target.value })}
+                            onChange={e => this.setState({ ...this.state, clave: e.target.value, showMsg:false })}
                             name="clave" id="clave" className="form-control"
                             placeholder="Clave" onKeyPress={this.onEnter}
                             required></input>
@@ -63,9 +59,7 @@ class Login extends React.Component {
 }
 
 const mapStateToProps = state => {
-    return {
-        signin_error: state.api.signin_error,
-    }
+    return { }
 }
 
 export default connect(mapStateToProps, { signin, currentUser })(Login);

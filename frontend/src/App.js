@@ -9,13 +9,19 @@ import despacho from './component/despacho';
 import almacen from './component/almacen';
 import usuario from './component/usuario';
 import movmat from './component/movmat';
-import inventario from './component/inventario'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { currentUser, logout } from './actions/';
-import SelMaterial from './component/elements/selMaterial';
+import Cuenta from './component/cuenta';
+import CuentaItem from './component/cuentaitem';
+import CuentaCuadrar from './component/cuentacuadrar';
+import StatusBar from './component/elements/statusBar'
+
+import './scss/style.scss';
 
 class App extends React.Component {
+
+
 
   componentDidMount() {
     this.props.currentUser();
@@ -48,7 +54,7 @@ class App extends React.Component {
   }
 
   warn() {
-    alert("You will be logged out automatically in 1 minuto.");
+    alert("Tu sesión se cerrará en 1 minuto.");
   }
 
   logout() {
@@ -91,11 +97,13 @@ class App extends React.Component {
           <Route path="/usuario" exact component={usuario}></Route>
           <Route path="/almacen" exact component={almacen}></Route>
           <Route path="/MovMat" exact component={movmat}></Route>
-          <Route path="/inventario" exact component={inventario}></Route>
           <Route path="/Or" exact component={Or}></Route>
           <Route path="/ubicar" exact component={Ubicar}></Route>
           <Route path="/despacho" exact component={despacho}></Route>
-          <Route path="/borrar" exact component={SelMaterial}></Route>
+          <Route path="/cuenta" exact component={Cuenta}></Route>
+          <Route path="/cuentaitem" exact component={CuentaItem}></Route>
+          <Route path="/cuentacuadrar" exact component={CuentaCuadrar} ></Route>
+          <StatusBar/>
           <div className="base"></div>
         </Router>
     );

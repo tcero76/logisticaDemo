@@ -44,6 +44,25 @@ public class Material {
 	@OneToMany(mappedBy = "material")
 	private Set<Oditem> oditems;
 
+	@OneToMany(mappedBy = "material")
+	private Set<Cuentaitem> cuentaitems;
+
+	public Set<Oditem> getOditems() {
+		return oditems;
+	}
+
+	public void setOditems(Set<Oditem> oditems) {
+		this.oditems = oditems;
+	}
+
+	public Set<Cuentaitem> getCuentaitems() {
+		return cuentaitems;
+	}
+
+	public void setCuentaitems(Set<Cuentaitem> cuentaitems) {
+		this.cuentaitems = cuentaitems;
+	}
+
 	public Set<Oritem> getOritems() {
 		return oritems;
 	}

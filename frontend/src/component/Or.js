@@ -1,32 +1,51 @@
 import React from 'react';
-import { init, currentNav, save_orec } from '../actions';
-import { connect } from 'react-redux';
-import '../scss/style.scss';
-import { Field, reduxForm } from 'redux-form';
 import { IntlProvider, FormattedNumber } from 'react-intl';
 import intlData from '../util/intlData';
 import NumberFormat from 'react-number-format';
+import SelMaterial from './elements/selMaterial';
+import Msg from './elements/msg';
+import api from '../util/api';
+import _ from 'lodash';
 
 class Or extends React.Component {
 
-    state = { guiadedespacho: null, oritems: [], alert:false }
+    constructor(props) {
+        super(props);
+        this.materialElement = React.createRef();
+    }
 
     componentDidMount() {
-        this.props.init();
-        this.props.currentNav(0);
-        this.setTimeOut();
     }
 
-    setTimeOut() {
-        this.alertTime = setTimeout(() => {this.setState({...this.state, alert:false})},5000);
-    }
+    state = { guiadedespacho: '', cantidad: null, material: null, oritems: {},
+        alert:false,
+        touched:{cantidad: false, guiadedespacho: false},
+        error: {cantidad: null, guiadedespacho: null},
+        errorResponse: null,
+        }
 
-    clearTimeOut() {
-        clearTimeout(this.alertTime);
+    saveOrec() {
+        api().post('/ors', {
+            guiadespacho: this.state.guiadespacho,
+            oritems: this.state.oritems.map(oi =>{
+                return {
+                    idmaterial: oi.material.idmaterial,
+                    cantidad: oi.cantidad,
+                    pos: oi.pos,
+                }
+            })
+        })
+        .then(res => {
+            this.setState({ ...this.state, oritems: res.data});
+        }).catch(e => {
+            this.setState({ ...this.state, errorResponse: e.response});
+        })
     }
-
+    
     renderTableRow() {
-        return this.state.oritems.map(fila => {
+        var oritems = Object.values(this.state.oritems);
+        console.log(oritems);
+        return oritems.sort((oi1,oi2) => oi1.pos-oi2.pos).map(fila => {
             return (
                 <tr key={fila.material.idmaterial}>
                     <td>{fila.material.nombre}</td>
@@ -39,17 +58,17 @@ class Or extends React.Component {
         })
     }
 
-    onSubmitOrec = () => {
-        this.props.save_orec(this.state);
-        this.props.reset();
-        this.setState({ guiadedespacho: null, oritems: [], alert: true});
-        this.clearTimeOut()
-        this.setTimeOut();
+    onSubmitOrec () {
+        this.saveOrec({ oritems: Object.values(this.state.oritems),
+            guiadespacho: this.state.guiadedespacho });
+        this.setState({ guiadedespacho: '', touched:{cantidad: false, guiadedespacho: false},
+        error: {cantidad: null, guiadedespacho: null}, oritems: [], alert: true});
     }
 
     renderTable() {
-        if(this.state.oritems.length<1)
+        if(Object.values(this.state.oritems).length===0) {
             return null;
+        }
         return (
             <div className="table-responsive">
                 <table className="table">
@@ -64,98 +83,142 @@ class Or extends React.Component {
                         {this.renderTableRow()}
                     </tbody>
                 </table>
-                <button className="btn btn-primary" onClick={this.onSubmitOrec}>Guardar</button>
+                <button className="btn btn-primary" onClick={e => this.onSubmitOrec()}>Guardar</button>
             </div>
         )
     }
 
-    onSubmit = formValues => {
-        var mat = this.props.materiales
-                    .find(m => m.idmaterial===parseInt(formValues.idmaterial));
-
-        var pos = this.state.oritems.length+1; 
-        this.state.oritems.push({
-            pos ,
-            cantidad: parseFloat(formValues.cantidad),
-            material: {idmaterial: parseInt(formValues.idmaterial),
-                       nombre: mat.nombre}
-            });
-        this.setState({...this.state,
-            guiadespacho: formValues.guiadespacho});
-        var guia = formValues.guiadespacho;
-        this.props.reset();
-        this.props.change('guiadespacho',guia);
-    }
-
-    renderMaterial = ({ input, label, meta: {touched, error} }) => {
-        var classNam='form-control';
-        if(touched) {
-            classNam = `form-control ${error ? ' is-invalid' : ' is-valid'}`;
+    renderMaterial() {
+        var callbackValue = value => {
+            this.setState({ ...this.state, material: value})
         }
-        return (
-            <div className="col-md-6 mb-3">
-                    <label htmlFor="material">{label}</label>
-
-
-                    <select id="material" className={classNam} {...input}>
-                        <option key={null} value={0}>Seleccionar</option>
-                        {this.props.materiales.map(mat => <option key={mat.idmaterial} value={mat.idmaterial}>{mat.nombre}</option>)}
-                    </select>
-
-                    
-                    <div className="invalid-feedback">
-                        {error}
-                    </div>
-                    <div className="valid-feedback">
-                        Ok.
-                    </div>
-            </div>
+        return (<div className="col-md-6 mb-3">
+                    <SelMaterial ref={this.materialElement}
+                        label="Material"
+                        value={callbackValue}
+                        error="Se debe ingresar un valor"
+                        ok="Ok"/>
+                </div>
         );
     }
 
-    renderCantidad = ({input, label, meta: {touched, error}}) => {
+    onChangeCantidad(e) {
+        this.setState({ ...this.state, cantidad: parseFloat(e.target.value.replace(',','.'))});
+        this.testError(e);
+    }
+
+    onBlurCantidad(e) {
+        this.setState({ ...this.state, touched: { ...this.state.touched,cantidad:true}});
+        this.testError(e)
+    }
+
+    testError(e) {
+        if(e.target.value=='' || e.target.value==null) {
+            this.state.error['cantidad'] = 'Se debe ingresar un valor';
+        } else {
+            this.state.error['cantidad'] = null;
+        }
+    }
+
+    renderCantidad () {
         var classNam='form-control';
-        if(touched) {
-            classNam = `form-control ${error ? ' is-invalid' : ' is-valid'}`;
+        if(this.state.touched.cantidad) {
+            classNam = `form-control ${!!this.state.error['cantidad'] ? ' is-invalid' : ' is-valid'}`;
         }
         return (
             <div className="col-md-3 mb-3">
-                <label htmlFor="cantidad">{label}</label>
-                <NumberFormat id="cantidad" className={classNam} {...input} autoComplete="off"
-                    thousandSeparator="." decimalSeparator="," ></NumberFormat>
+                <label htmlFor="cantidad">Cantidad</label>
+                <NumberFormat id="cantidad"
+                    onChange={e => this.onChangeCantidad(e)}
+                    onBlur={e => this.onBlurCantidad(e)}
+                    value={this.state.cantidad}
+                    className={classNam}
+                    autoComplete="off"
+                    thousandSeparator="."
+                    decimalSeparator=","/>
                     <div className="invalid-feedback">
-                        {error}
+                        Se debe ingresar un valor
                     </div>
                     <div className="valid-feedback">
                         Ok.
                     </div>
             </div>
         );
+    }
+
+    onClickAgregar(e) {
+        e.preventDefault();
+        if(this.state.cantidad && this.state.material.idmaterial!=null) {
+            var keySet = _.mapKeys([{
+                                        cantidad: parseFloat(this.state.cantidad),
+                                        material: this.state.material,
+                                    }],
+                                'material.idmaterial');
+            // var oi = this.state.oritems.find(o => o.material.idmaterial === this.state.material.idmaterial)
+            if(typeof this.state.oritems[this.state.material.idmaterial] ==='undefined'){
+                var oritems = {...this.state.oritems, ...keySet};
+                oritems[this.state.material.idmaterial]['pos']=Object.keys(oritems).length;
+            } else {
+                var pos = this.state.oritems[this.state.material.idmaterial]['pos'];
+                keySet[this.state.material.idmaterial]['pos']=pos;
+                var oritems = {...this.state.oritems, ...keySet};
+            }
+
+
+            this.setState({ oritems, cantidad: null,
+                    touched: { ...this.state.touched, cantidad:false} });
+            this.materialElement.current.resetMaterial();
+        }
     }
 
     renderFormRow() {
         return (
             <div className="form-row mb-2 form__fila">
-                <Field name="idmaterial" component={this.renderMaterial} label="Nombre del Material"></Field>
-                <Field name="cantidad" component={this.renderCantidad} label="Cantidad" autocomplete="off"></Field>
+                {this.renderMaterial()}
+                {this.renderCantidad()}
                 <div className="col-md-2 mb-3" style={{top:'2rem'}}>
-                    <button className="btn btn-primary">Agregar</button>
+                    <button className="btn btn-primary"
+                        onClick={e => this.onClickAgregar(e)}>Agregar</button>
                 </div>
                 
             </div>
         )
     }
 
-    renderGuia({input, label, meta: {touched, error}}) {
+    onChangeGuiadedespacho(e) {
+        this.setState({ ...this.state, guiadedespacho: e.target.value});
+        this.testErrorGuiadedespacho(e);
+    }
+
+    onBlurGuiadedespacho(e) {
+        this.setState({ ...this.state, touched: { ...this.state.touched, guiadedespacho:true}});
+        this.testErrorGuiadedespacho(e);
+    }
+
+    testErrorGuiadedespacho(e) {
+    if(!e.target.value) {
+        this.state.error['guiadedespacho'] = 'Se debe ingresar un valor';
+    } else {
+        this.state.error['guiadedespacho'] = null;
+    }
+    }
+
+    renderGuia() {
         var classNam = 'form-control';
-        if(touched) {
-            classNam = `form-control ${error?' is-invalid':'is-valid'}`;
+        if(this.state.touched['guiadedespacho']) {
+            classNam = `form-control ${this.state.error['guiadedespacho']?' is-invalid':'is-valid'}`;
         }
         return (
             <div className="col-md-4">
-                <label htmlFor="guiadespacho">{label}</label>
-                <input id="guiadespacho" name="guiadespacho" {...input} className={classNam} autoComplete="off"></input>
-                <div className="invalid-feedback">{error}</div>
+                <label htmlFor="guiadespacho">Guía de Despacho</label>
+                <input id="guiadespacho"
+                    onChange={e => this.onChangeGuiadedespacho(e)}
+                    onBlur={e => this.onBlurGuiadedespacho(e)}
+                    value={this.state.guiadedespacho}
+                    name="guiadespacho"
+                    className={classNam}
+                    autoComplete="off"></input>
+                <div className="invalid-feedback">Se debe ingresar el código</div>
                 <div className="valid-feedback">Ok</div>
             </div>
         )
@@ -164,8 +227,7 @@ class Or extends React.Component {
     renderFormGuia() {
         return (
             <div className="form-row form__fila">
-                <Field name="guiadespacho" component={this.renderGuia}
-                label="Guia de Despacho"></Field>
+                {this.renderGuia()}
             </div>
         )
     }
@@ -174,20 +236,17 @@ class Or extends React.Component {
         if(!this.state.alert) {
             return null;
         }
-        if(this.props.respuestaOrec===null) {
-            return null;
-        }
         return (
             <div className="alert alert-success" role="alert">
-                idOrec {this.props.respuestaOrec} guardada
+                idOrec guardada
             </div>
         )
     }
 
     renderForm() {
         return (
-            <form onSubmit={this.props.handleSubmit(this.onSubmit)}>
-                {this.renderAlert()}
+            <form>
+                <Msg/>
                 {this.renderFormGuia()}
                 {this.renderFormRow()}
             </form>
@@ -195,17 +254,8 @@ class Or extends React.Component {
     }
 
     render() {
-        if (typeof this.props.materiales === 'undefined') {
-            return (
-                <div className="d-flex justify-content-center centrar-vertical">
-                  <div className="spinner-border" role="status">
-                      <span className="sr-only">Loading...</span>
-                  </div>
-                </div>
-            );
-        }
         return (
-            <IntlProvider locale="es" {...intlData}>
+            <IntlProvider locale={navigator.language} {...intlData}>
                 <div className="container">
                     <h1 className="mb-3">Recepción Ors</h1>
                     <div className="card mb-4 card__component">
@@ -222,38 +272,4 @@ class Or extends React.Component {
     }
 }
 
-const mapStateToProps = state => {
-    var materiales = state.api.materiales;
-    if (materiales) {
-        materiales = Object.values(materiales);
-    }
-    var respuestaOrec = state.api.respuestaOrec;
-    if(!respuestaOrec) {
-        respuestaOrec = null;
-    }
-    return {
-        materiales,
-        respuestaOrec,
-    }
-}
-
-const validate = (formValues, state) => {
-    const error = {};
-    if (formValues.idmaterial==='0') {
-        error.idmaterial = "Debe seleccionar un material.";
-    }
-    if(!formValues.cantidad) {
-        error.cantidad = "Debe ingresar cantidad.";
-    }
-    if(!formValues.guiadespacho) {
-        error.guiadespacho = "Ingresar Guía de Despacho.";
-    }
-    return error;
-}
-
-const form = reduxForm({
-    form: 'orForm',
-    validate
-})(Or);
-
-export default connect(mapStateToProps, { init, currentNav, save_orec })(form);
+export default Or;

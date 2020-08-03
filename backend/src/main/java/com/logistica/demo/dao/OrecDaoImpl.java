@@ -19,7 +19,9 @@ public class OrecDaoImpl implements OrecDao {
 	@Override
 	public List<Orec> listar() {
 		Session ss = em.unwrap(Session.class);
-		String hql = "select distinct o from Orec o left join fetch o.oritems ori";
+		String hql = "select distinct o " +
+				"from Orec o " +
+				"left join fetch o.oritems ori";
 		return (List<Orec>)ss.createQuery(hql).list();
 	}
 

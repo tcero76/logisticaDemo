@@ -33,13 +33,12 @@ public class Usuario implements UserDetails {
 	@Column(name = "activo")
 	private Boolean activo;
 	
-	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
-			CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "idrol")
 	private Rol rol;
 
 	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
-			CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+			CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
 	@JoinColumn(name = "idalmacen")
 	private Almacen almacen;
 	
@@ -69,6 +68,12 @@ public class Usuario implements UserDetails {
 
 	@OneToMany(mappedBy = "usuario")
 	private Set<Od> ods;
+
+	@OneToMany(mappedBy = "usuario")
+	private Set<Cuenta> cuentas;
+
+	@OneToMany(mappedBy = "usuario")
+	private Set<Cuentaitem> cuentaitems;
 
 	public Boolean getActivo() {
 		return activo;
@@ -172,6 +177,38 @@ public class Usuario implements UserDetails {
 
 	public void setAlmacen(Almacen almacen) {
 		this.almacen = almacen;
+	}
+
+	public Set<Oditem> getOditems() {
+		return oditems;
+	}
+
+	public void setOditems(Set<Oditem> oditems) {
+		this.oditems = oditems;
+	}
+
+	public Set<Od> getOds() {
+		return ods;
+	}
+
+	public void setOds(Set<Od> ods) {
+		this.ods = ods;
+	}
+
+	public Set<Cuenta> getCuentas() {
+		return cuentas;
+	}
+
+	public void setCuentas(Set<Cuenta> cuentas) {
+		this.cuentas = cuentas;
+	}
+
+	public Set<Cuentaitem> getCuentaitems() {
+		return cuentaitems;
+	}
+
+	public void setCuentaitems(Set<Cuentaitem> cuentaitems) {
+		this.cuentaitems = cuentaitems;
 	}
 
 	@Override

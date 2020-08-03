@@ -4,7 +4,6 @@ import com.logistica.demo.payload.UbicacionesReq;
 
 import java.util.Date;
 import java.util.Set;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.persistence.*;
@@ -34,9 +33,12 @@ public class Nivel {
 	
 	@Column(name = "nombre")
 	private String nombre;
+
+	@Column(name = "fecharegistro")
+	private Date fecharegistro;
 	
 	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
-			CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+			CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
 	@JoinColumn(name = "idzona")
 	private Zona zona;
 	
@@ -45,11 +47,8 @@ public class Nivel {
 	@JoinColumn(name = "idusuario")
 	private Usuario usuario;
 	
-	@Column(name = "fecharegistro")
-	private Date fecharegistro;
-	
 	@OneToMany(mappedBy = "nivel", cascade = {CascadeType.DETACH, CascadeType.MERGE,
-			CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+			CascadeType.PERSIST, CascadeType.REFRESH})
 	private Set<Pos> poses;
 
 	public Set<Pos> getPoses() {

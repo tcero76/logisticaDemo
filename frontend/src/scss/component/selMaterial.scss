@@ -1,11 +1,10 @@
 .selMaterial {
     position: relative;
-    &__input {
 
-    }
     &__lista{
         position: absolute;
         width: 35rem;
         animation: fadeIn .4s; 
+        z-index: 10;
     }   
 }

@@ -1,9 +1,13 @@
 package com.logistica.demo.service;
 
 import com.logistica.demo.model.Almacen;
+import com.logistica.demo.model.Zona;
 import org.springframework.stereotype.Service;
 
-@Service
+import java.util.List;
+
 public interface AlmacenService {
-    public Almacen listar();
+    Almacen findByAlmacen(Almacen almacen);
+
+    Almacen guardar(Almacen almacen);
 }
