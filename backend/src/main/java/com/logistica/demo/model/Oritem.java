@@ -20,10 +20,15 @@ public class Oritem {
 	
 	public Oritem() {
 	}
-	
-	public Oritem (Integer idmaterial, Double cantidad) {
-		this.material = new Material(idmaterial);
+
+	public Oritem(Material material, Double cantidad, Date fecharegistro, Usuario usuario, Orec orec, Inventario inventario, Integer pos) {
+		this.material = material;
 		this.cantidad = cantidad;
+		this.fecharegistro = fecharegistro;
+		this.usuario = usuario;
+		this.orec = orec;
+		this.inventario = inventario;
+		this.pos = pos;
 	}
 
 	@Id

@@ -3,6 +3,7 @@ package com.logistica.demo.model;
 import com.logistica.demo.payload.UbicacionesReq;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -11,6 +12,10 @@ import javax.persistence.*;
 public class Pos {
 	
 	public Pos() {
+	}
+
+	public Pos(Integer idpos) {
+		this.idpos = idpos;
 	}
 
 	public Pos(UbicacionesReq.Nivel.Pos poses) {
@@ -34,9 +39,15 @@ public class Pos {
 	private Date fecharegistro;
 	
 	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
-			CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+			CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
 	@JoinColumn(name = "idnivel")
 	private Nivel nivel;
+
+	@OneToMany(mappedBy = "pos")
+	private Set<Cuentaitem> cuentaitems;
+
+	@OneToMany(mappedBy = "pos", fetch = FetchType.LAZY)
+	private Set<Inventario> inventarios;
 
 	public Nivel getNivel() {
 		return nivel;
@@ -105,11 +116,11 @@ public class Pos {
 
 	@Override
 	public String toString() {
-		return nombre +
+		return getNivel().getZona().getNombre() +
 				"/" +
 				getNivel().getNombre() +
 				"/" +
-				getNivel().getZona().getNombre();
+				nombre;
 	}
 	
 }

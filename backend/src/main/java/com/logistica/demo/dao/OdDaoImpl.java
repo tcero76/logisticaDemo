@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class OdDaoImpl implements OdDao {
@@ -15,17 +16,16 @@ public class OdDaoImpl implements OdDao {
     public EntityManager em;
 
     @Override
-    public Od findById(Integer id) {
-        Session ss = em.unwrap(Session.class);
+    public Optional<Od> findById(Integer id) {
         String hql = "select distinct o from Od o " +
                 "left join fetch o.oditems odi " +
-                "left join odi.material m " +
-                "left join odi.inventario i " +
-                "left join i.pos p " +
+                "left join fetch odi.material m " +
+                "left join fetch odi.inventario i " +
+                "left join fetch i.pos p " +
                 "where o.idod = :id";
-        return (Od)ss
+        return Optional.ofNullable((Od)em
                 .createQuery(hql)
                 .setParameter("id", id)
-                .uniqueResult();
+                .getSingleResult());
     }
 }

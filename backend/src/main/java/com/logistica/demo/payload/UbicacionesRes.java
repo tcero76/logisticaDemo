@@ -11,8 +11,8 @@ public class UbicacionesRes {
         this.nombre = zona.getNombre();
         this.id = zona.getIdzona();
         this.niveles = zona.getNiveles().stream()
-                        .map(Nivel::new)
-                        .collect(Collectors.toSet());
+                .map(Nivel::new)
+                .collect(Collectors.toSet());
     }
 
     private String nombre;
@@ -90,11 +90,22 @@ public class UbicacionesRes {
             public Pos(com.logistica.demo.model.Pos pos) {
                 this.nombre = pos.getNombre();
                 this.id = pos.getIdpos();
+                this.ubicacion = pos.toString();
             }
 
             private String nombre;
 
             private Integer id;
+
+            private String ubicacion;
+
+            public String getUbicacion() {
+                return ubicacion;
+            }
+
+            public void setUbicacion(String ubicacion) {
+                this.ubicacion = ubicacion;
+            }
 
             public String getNombre() {
                 return nombre;

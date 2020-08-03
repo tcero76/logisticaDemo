@@ -1,26 +1,12 @@
 .table {
     &__container {
         width: 60%;
+        @include media-breakpoint-down(xs) {
+            width: 100%;
+           }
         background-color: rgba($color: $light, $alpha: 0.5);
     }
-
-    &__column {
-        &__phone-hide {
-            @include media-breakpoint-down(xs) {
-                 visibility: collapse;
-                 border-collapse: collapse;
-                display:none;
-                 width: 0%;
-                }
-            
-        }
-        &__phone-show {
-            @include media-breakpoint-down(xs) {
-                 visibility: visible;
-                //  display:;
-                 width: 100%;
-                }
-            
-        }
+    @include media-breakpoint-down(xs) {
+        font-size: .7em;
     }
 }

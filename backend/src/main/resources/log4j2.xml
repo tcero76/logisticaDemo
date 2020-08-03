@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="DEBUG">
+<Configuration status="INFO">
     <Appenders>
         <Console name="LogToConsole" target="SYSTEM_OUT">
             <PatternLayout pattern="%style{%d{HH:mm:ss}}{red} %highlight{ %t %x %-5level %c{1.}: %msg%n%throwable}{FATAL=white, ERROR=red, WARN=Yellow, INFO=blue, DEBUG=green, TRACE=Yellow}"/>
@@ -18,6 +18,15 @@
         <Logger name="org.springframework.boot" level="error" additivity="false">
             <AppenderRef ref="LogToConsole"/>
         </Logger>
+        <Logger name="org.hibernate.engine.internal.StatisticalLoggingSessionEventListener" level="info" additivity="false">
+            <AppenderRef ref="LogToConsole"/>
+        </Logger>
+<!--        <Logger name="org.hibernate.SQL" level="debug" additivity="false">-->
+<!--            <AppenderRef ref="LogToConsole"/>-->
+<!--        </Logger>-->
+<!--        <Logger name="org.hibernate.type" level="trace" additivity="false">-->
+<!--            <AppenderRef ref="LogToConsole"/>-->
+<!--        </Logger>-->
         <Root level="error">
             <AppenderRef ref="LogToFile"/>
             <AppenderRef ref="LogToConsole"/>

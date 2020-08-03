@@ -35,7 +35,7 @@ public class Almacen {
 	private Date fecharegistro;
 	
 	@OneToMany(mappedBy = "almacen",cascade = {CascadeType.DETACH, CascadeType.MERGE,
-			CascadeType.PERSIST, CascadeType.REFRESH},fetch = FetchType.EAGER)
+			CascadeType.PERSIST, CascadeType.REFRESH})
 	private Set<Zona> zonas;
 
 	@OneToMany(mappedBy = "almacen")

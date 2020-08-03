@@ -1,15 +1,16 @@
 package com.logistica.demo.dao;
 
-import com.logistica.demo.model.Almacen;
-import com.logistica.demo.model.Inventario;
-import com.logistica.demo.model.Material;
-import com.logistica.demo.model.Pos;
+import com.logistica.demo.model.*;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface InventarioDao {
 
-    public Integer ultInventario(Material material, Pos pos);
-    public List<Inventario> listarInventario(Almacen almacen);
-    public List<Inventario> listarByMaterial(Almacen almacen, Integer idmaterial);
+    public Optional<Integer> ultInventario(Integer idmaterial, Integer idpos);
+    public Optional<List<Inventario>> listarInventario(Almacen almacen, Integer idmaterial);
+    public List<Inventario> listarInventario(Integer idzona);
+    public Optional<List<Inventario>> listarByMaterial(Almacen almacen, Integer idmaterial, Integer pageSize, Integer offset);
+
+    public Optional<Integer> countByAlmacenAndMaterial(Integer idalmacen, Integer idmaterial);
 }

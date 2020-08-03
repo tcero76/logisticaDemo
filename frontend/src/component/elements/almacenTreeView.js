@@ -15,6 +15,7 @@ import ForumIcon from '@material-ui/icons/Forum';
 import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import api from '../../util/api';
 
 const useTreeItemStyles = makeStyles(theme => ({
   root: {
@@ -179,16 +180,89 @@ Almacen.propTypes = {
 
 class AlmacenTreeView extends Component {
 
-    onSelect(elemento) {
-      this.props.onClick(elemento);
-    }
+  state = { ubicaciones: null }
+
+  componentDidMount() {
+    this.listarAlmacen();
+  }
+
+  listarAlmacen()  {
+      api().get('/almacenes')
+      .then(res => {
+          this.setState({ ...this.state, ubicaciones:res.data});
+      })
+  }
+
+  submitZonas(ubicaciones) {
+    api().post('/almacenes', ubicaciones)
+    .then(res => {
+        this.setState({ ...this.state, ubicaciones:res.data});
+    })
+  }
+
+  findField(element, id, fieldTarget) {
+    // Extrae el campo child del objecto element según corresponde
+    const fields = ['zonas', 'niveles', 'poses'];
+    var field =  fields
+                    .find(i => !!Object.keys(element[0])
+                        .find(e => i===e));
+    var NField = fields.indexOf(field);
+    if(NField===-1) NField=3;
+    var NFieldTarget = fields.indexOf(fieldTarget);
+    return element
+        .reduce((a,c) => {
+          // En caso de encontrarlo sale.
+            if(!!a) return a;
+            // En caso de estar en el nivel del árbol correcto,
+            // revisa si corresponde el id.
+            if(c.id===id && NField===(NFieldTarget+1)) return c;
+            // Hace un llamado recursivo un nivel más bajo en el árbol.
+            if(typeof c[field] !== 'undefined') {
+                if(c[field].length > 0){
+                    var children = this.findField(c[field],id,fieldTarget);
+                    if(!!children) return children;
+                    else return null;
+                }
+            }
+            return null;
+        },null);
+}
+
+  editField(element, id, fieldTarget, value) {
+      // Extrae el campo child del objecto element según corresponde
+      const fields = ['zonas', 'niveles', 'poses'];
+      var field =  fields
+                      .find(i => !!Object.keys(element[0])
+                          .find(e => i===e));
+      var NField = fields.indexOf(field);
+      if(NField===-1) NField=3;
+      var NFieldTarget = fields.indexOf(fieldTarget);
+      return element
+          .map(e => {
+              // En caso de estar en el nivel del árbol correcto,
+              // revisa si corresponde el id.
+              if(e.id===id && NField===(NFieldTarget+1)) {
+                  e.nombre = value;
+              }
+              // Hace un llamado recursivo un nivel más bajo en el árbol.
+              if(typeof e[field] !== 'undefined') {
+                  if(e[field].length > 0){
+                      var children = this.editField(e[field],id,fieldTarget,value);
+                  }
+              }
+              return e;
+          });
+  }
+
+  onSelect(elemento) {
+    this.props.onClick(this.state.ubicaciones, elemento);
+  }
 
   render() {
-    if(!this.props.Zonas){
+    if(!this.state.ubicaciones){
       return null;
     }
-    return (
-      <TreeView
+    return (<TreeView
         style={{
           height: 'auto',
           flexGrow: 1,
@@ -199,9 +273,10 @@ class AlmacenTreeView extends Component {
         defaultExpandIcon={<ArrowRightIcon />}
         defaultEndIcon={<div style={{ width: 24 }} />}
       >
-        <Almacen nodeId="idAlmacen" labelIcon={House} onSelect={() => this.onSelect('idAlmacen')}
+        <Almacen nodeId="idAlmacen" labelIcon={House}
+          onSelect={() => this.onSelect('idAlmacen')}
           labelText={this.props.Almacen}>
-          {this.props.Zonas.map(z => {
+          {this.state.ubicaciones.map(z => {
             return (<Zona key={'zonas'+z.id} nodeId={'zonas'+z.id} labelText={z.nombre} onSelect={() => this.onSelect('zonas'+z.id)}>
                       {z.niveles.map(n => {
                         return (<Nivel key={'niveles'+n.id} nodeId={'niveles'+n.id} labelText={n.nombre} onSelect={() => this.onSelect('niveles'+n.id)}>

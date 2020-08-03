@@ -26,8 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
-import com.logistica.demo.security.UnauthorizedHandler;
-import com.logistica.demo.security.JwtAuthenticationFilter;
+import com.logistica.demo.exception.UnauthorizedHandler;
 import com.logistica.demo.service.UsuarioServiceImpl;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -99,9 +98,10 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 		        .deleteCookies("JSESSIONID")
 	        .and()
 		        .authorizeRequests()
-		        .antMatchers("/ubicar/**").permitAll()
 		        .antMatchers("/signin").permitAll()
-		        .antMatchers("/user/usuario").permitAll()
+		        .antMatchers("/usuarios/current").permitAll()
+				.antMatchers("/actuator/**").permitAll()
+				.antMatchers("/cuentaitem/borrar/**").permitAll()
 		        .anyRequest()
 				.authenticated();
     }

@@ -1,17 +1,24 @@
 package com.logistica.demo.controller;
 
+import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.logistica.demo.exception.NotFoundException;
 import com.logistica.demo.model.Usuario;
+import com.logistica.demo.payload.OrecRes;
+import com.logistica.demo.payload.OritemResponse;
 import com.logistica.demo.service.OrecService;
 import com.logistica.demo.model.Material;
-import com.logistica.demo.repository.MaterialRepository;
+import com.logistica.demo.repository.MaterialRepo;
+import com.logistica.demo.service.OritemService;
+import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,49 +28,55 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.logistica.demo.model.Orec;
 import com.logistica.demo.model.Oritem;
-import com.logistica.demo.payload.OrecRequest;
+import com.logistica.demo.payload.OrecReq;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
-
+import javax.websocket.server.PathParam;
 
 @RestController
-@RequestMapping("/material")
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+@RequestMapping("/ors")
 public class OrController {
 
-	private static final Logger logger = LoggerFactory.getLogger(OrController.class);
-	
-	@Autowired
-	private MaterialRepository materialrepo;
+	private static final Logger log = LoggerFactory.getLogger(OrController.class);
 
 	@Autowired
-	private OrecService orecservice;
+	private MaterialRepo materialrepo;
 
-	@GetMapping("/materiales")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public List<Material> listarMateriales() {
-		List<Material> materiales = materialrepo.findAll();
-		logger.info("Envía materiales");
-		return materiales;
-	}
+	@Autowired
+	private OrecService orecService;
 
-	@PostMapping("/save")
+
+	@Autowired
+	private OritemService oritemService;
+
+	@GetMapping
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public ResponseEntity<Integer> guardar(@Valid @RequestBody OrecRequest orecreqs,
-										@AuthenticationPrincipal Usuario usuario) {
-		List<Material> materiales = materialrepo.findAll();
-		Orec orec = new Orec(usuario,new Date(), orecreqs.getGuiadespacho(),null);
-		List<Oritem> oritems = orecreqs.getOritems().stream()
-				.filter((orecreq) -> materiales.contains(orecreq.getMaterial()))
-				.map( oritem -> {
-					oritem.setOrec(orec);
-					oritem.setFecharegistro(new Date());
-					oritem.setUsuario(usuario);
-					return oritem;
-				})
+	public List<OritemResponse> listar() {
+		List<Oritem> oritems = oritemService.listarPendiente();
+		return oritems.stream()
+				.map(OritemResponse::new)
 				.collect(Collectors.toList());
-		orecservice.guardar(orec,oritems);
-		return ResponseEntity.ok(orec.getIdorec());
 	}
 
+	@PostMapping(consumes = "application/json")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public ResponseEntity<Integer> save(@AuthenticationPrincipal Usuario usuario,
+											@RequestBody OrecReq orecReq) {
+		log.info(orecReq.toString());
+		Orec orec = orecService.save(orecReq, usuario)
+				.orElseThrow(() -> new InternalException("Dato no almacenado"));
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{idorec}")
+				.buildAndExpand(orec.getIdorec()).toUri();
+		return ResponseEntity.created(location).body(orec.getIdorec());
+	}
+
+	@GetMapping("/{idorec}")
+	public OrecRes loadById(@AuthenticationPrincipal Usuario usuario,
+							@PathParam("idorec") Integer idorec) {
+			Orec orec = orecService.findById(idorec)
+							.orElseThrow(() -> new NotFoundException("idorec", "Orec", idorec));
+			return new OrecRes(orec);
+
+	}
 }

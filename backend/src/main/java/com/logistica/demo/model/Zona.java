@@ -4,6 +4,7 @@ import com.logistica.demo.payload.UbicacionesReq;
 
 import java.util.Date;
 import java.util.Set;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -24,6 +25,10 @@ import javax.validation.constraints.NotNull;
 public class Zona {
 	
 	public Zona() {
+	}
+
+	public Zona(@NotNull Integer idzona) {
+		this.idzona = idzona;
 	}
 
 	public Zona(UbicacionesReq ubicacionesReq) {
@@ -52,7 +57,7 @@ public class Zona {
 	private Almacen almacen;
 	
 	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
-			CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+			CascadeType.PERSIST, CascadeType.REFRESH},fetch = FetchType.LAZY)
 	@JoinColumn(name = "idusuario")
 	private Usuario usuario;
 	
@@ -60,8 +65,19 @@ public class Zona {
 	private Date fecharegistro;
 	
 	@OneToMany(mappedBy = "zona",cascade = {CascadeType.DETACH, CascadeType.MERGE,
-			CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+			CascadeType.PERSIST, CascadeType.REFRESH})
 	private Set<Nivel> niveles;
+
+	@OneToMany(mappedBy = "zona")
+	private Set<Cuenta> cuentas;
+
+	public Set<Cuenta> getCuentas() {
+		return cuentas;
+	}
+
+	public void setCuentas(Set<Cuenta> cuentas) {
+		this.cuentas = cuentas;
+	}
 
 	public Set<Nivel> getNiveles() {
 		return niveles;
@@ -140,5 +156,5 @@ public class Zona {
 	public String toString() {
 		return "Zona [nombre=" + nombre + "]";
 	}
-	
+
 }

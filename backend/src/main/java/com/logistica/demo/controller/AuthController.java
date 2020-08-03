@@ -46,6 +46,4 @@ public class AuthController {
                         ((Usuario)auth.getPrincipal()).getAlmacen().getNombre());
         return ResponseEntity.ok(jwtAuthResp);
     }
-    
-	
 }

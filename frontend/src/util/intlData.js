@@ -1,10 +1,10 @@
 export default {
-    "locales": "es",
+    "locales": "es-CL",
     "formats": {
         "date": {
             "short": {
                 "day": "numeric",
-                "month": "2-digit",
+                "month": "long",
                 "year": "numeric"
             }
         },
@@ -32,5 +32,11 @@ export default {
                 "style": "numeric"
             }
         }
+    },
+    "messages": {
+        "es-CL":
+            {
+                "prueba":"Esto es una prueba",
+            }
     }
 }

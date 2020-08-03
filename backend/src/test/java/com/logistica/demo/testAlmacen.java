@@ -1,7 +1,7 @@
 package com.logistica.demo;
 
 import com.logistica.demo.model.Almacen;
-import com.logistica.demo.repository.AlmacenRepository;
+import com.logistica.demo.repository.AlmacenRepo;
 import io.jsonwebtoken.lang.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +21,7 @@ public class testAlmacen {
 	private static final Logger log = LoggerFactory.getLogger(testAlmacen.class);
 
     @Autowired
-    private AlmacenRepository almacenrepository;
+    private AlmacenRepo almacenrepository;
 
     @Test
     public void crear() {

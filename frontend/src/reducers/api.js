@@ -4,54 +4,55 @@ import {
     CURRENT_USER,
     CURRENT_NAV,
     LOGOUT,
-    SIGN_IN_ERROR,
-    INIT,
-    UBICACIONES,
-    SAVE_OREC,
-    FETCH_OREC,
-    SEND_UBIC,
-    FETCH_INVENTARIO,
-    SEND_DESPACHO,
-    LIST_USUARIO,
-    UPDATE_ZONAS,
-    SUBMIT_ZONAS,
-    FETCH_MATMOVE
+    POST,
+    FETCH_DATA,
+    FETCH_DATA_LIST,
+    FETCH_PAGINABLE,
+    FETCH_ZONA,
+    FETCH_ZONA_DETAIL,
+    SEND_CUENTAITEM,
+    ERROR_RESPONSE,
+    RESET,
+    FETCH_UBICACIONES,
 } from '../util/types';
 
 export default (state = {}, action) => {
     switch (action.type) {
-        case INIT:
-            return {...state, materiales: _.mapKeys(action.payload, 'idmaterial')};
+        case FETCH_UBICACIONES:
+            return { ...state, ubicaciones: action.payload }
+        case FETCH_DATA:
+            return { ...state, rows: action.payload }
+        case FETCH_DATA_LIST:
+            return { ...state, items:action.payload }
+        case FETCH_ZONA:
+            return { ...state, zonas: action.payload }
+        case FETCH_ZONA_DETAIL:
+            return { ...state, zonaDetalle: action.payload }
+        case FETCH_PAGINABLE:
+            return { ...state, rows: action.payload.list,
+                        totalPage:action.payload.totalPag,
+                        page: action.payload.page }
+        case POST:
+            return {...state, respuestaOrec: action.payload ,
+                status: action.payload.status, msg: action.payload.data}
+        case ERROR_RESPONSE:
+            return { ...state, 
+                msg: action.payload.data.message, status: action.payload.status }
+        case RESET:
+            return { ...state, items: {}, datos: [], msg: null, status: null, 
+            rows: null, page: null, totalPage: null}
         case SIGN_IN:
-            return {...state, usuario: { idusuario: action.payload.idUsuario, nombre: action.payload.nombre , isAuthenticated: true, almacen: action.payload.almacen } }
-        case SIGN_IN_ERROR:
-            return {...state, signin_error: action.payload }
+            return {...state, usuario: { idusuario: action.payload.idUsuario,
+                nombre: action.payload.nombre ,
+                isAuthenticated: true,
+                almacen: action.payload.almacen } }
         case LOGOUT:
-            return { ...state, usuario: {idusuario: null, nombre: 'anonymousUser', isAuthenticated: false }}
+            return { ...state, usuario: {idusuario: null,
+                nombre: 'anonymousUser', isAuthenticated: false } }
         case CURRENT_USER:
-            return { ...state, usuario: action.payload, almacen: action.payload.almacen}
+            return { ...state, usuario: action.payload, almacen: action.payload.almacen }
         case CURRENT_NAV:
-            return { ...state, currentNav: action.payload }
-        case UBICACIONES:
-            return { ...state, ubicaciones: action.payload }
-        case SAVE_OREC:
-            return {...state, respuestaOrec: action.payload }
-        case FETCH_OREC:
-            return { ...state, tablaOritemPend: _.mapKeys(action.payload, 'idoritem')}
-        case SEND_UBIC:
-            return { ...state, tablaOritemPend: _.mapKeys(action.payload, 'idoritem')}
-        case FETCH_INVENTARIO:
-            return { ...state, inventario: action.payload }
-        case SEND_DESPACHO:
-            return { ...state, respuestaOd: action.payload }
-        case LIST_USUARIO:
-            return { ...state, listadoUsuario: action.payload }
-        case UPDATE_ZONAS:
-            return { ...state, ubicaciones: action.payload }
-        case SUBMIT_ZONAS:
-            return { ...state, respuestaZonas: action.payload }
-        case FETCH_MATMOVE:
-            return { ...state, movimientos: action.payload}
+            return { ...state, currentNav: action.payload}
         default:
             return state;
     }

@@ -11,7 +11,8 @@ public class Inventario {
 	public Inventario() {
 	}
 
-	public Inventario(Material material, Double cantidad, Pos pos, Date fecharegistro, Usuario usuario, Double cantidadtotal, Oritem oritem, Oditem oditem) {
+	public Inventario(Material material, Double cantidad, Pos pos, Date fecharegistro, Usuario usuario,
+					  Double cantidadtotal, Oritem oritem, Oditem oditem, Cuentaitem cuentaitem) {
 		this.material = material;
 		this.cantidad = cantidad;
 		this.pos = pos;
@@ -20,6 +21,7 @@ public class Inventario {
 		this.cantidadtotal = cantidadtotal;
 		this.oritem = oritem;
 		this.oditem = oditem;
+		this.cuentaitem = cuentaitem;
 	}
 
 	@Id
@@ -47,13 +49,27 @@ public class Inventario {
 	@Column(name = "cantidadtotal")
 	private Double cantidadtotal;
 	
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE,
+												CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinColumn(name = "idoritem")
 	private Oritem oritem;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "idoditem")
+	@OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE,
+			CascadeType.PERSIST, CascadeType.REFRESH})
+	@JoinColumn(name = "idoditem", referencedColumnName = "idoditem")
 	private Oditem oditem;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "idcuentaitem")
+	private Cuentaitem cuentaitem;
+
+	public Cuentaitem getCuentaitem() {
+		return cuentaitem;
+	}
+
+	public void setCuentaitem(Cuentaitem cuentaitem) {
+		this.cuentaitem = cuentaitem;
+	}
 
 	public Oditem getOditem() {
 		return oditem;
