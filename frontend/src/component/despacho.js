@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import SelMaterial from './elements/selMaterial'
 import NumberFormat from 'react-number-format';
 import api from '../util/api';
+import Msg from './elements/msg';
 import _ from 'lodash';
 
 class Despacho extends Component {
 
-    state = {inventario: {}, touched: {}, error: {}, rows: null}
+    state = {inventario: {}, touched: {}, error: {}, rows: null, 
+            msg: null, status: null}
 
     onSubmit() {
             if(_.isEmpty(this.items)) {
@@ -16,7 +18,8 @@ class Despacho extends Component {
                 .map(i => { return {cantidadDespacho:i.cantidadDespacho, idmaterial: i.material.idmaterial, idpos: i.pos.idpos}})
                 api().post('/od', items)
                     .then(res => {
-                        this.setState({ ...this.state, rows: res.data})
+                        this.setState({ ...this.state, msg: res.data.message, status: res.status
+                        })
                     })
                     .catch(e => {
                         this.setState({ ...this.state, errorResponse: e.response})
@@ -119,7 +122,6 @@ class Despacho extends Component {
         );
     }
 
-
     renderLista() {
         if(!this.state.rows){
             return null;
@@ -132,6 +134,7 @@ class Despacho extends Component {
     render() {
         return (<div className="container">
                     <h1>Despacho</h1>
+                    <Msg msg={this.state.msg} status={this.state.status}/>
                     {this.renderMaterial()}
                     <form className="col-lg-6">
                         {this.renderLista()}

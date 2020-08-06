@@ -36,8 +36,7 @@ export default (state = {}, action) => {
             return {...state, respuestaOrec: action.payload ,
                 status: action.payload.status, msg: action.payload.data}
         case ERROR_RESPONSE:
-            return { ...state, 
-                msg: action.payload.data.message, status: action.payload.status }
+            return { ...state, msg: action.payload.data.message, status: action.payload.status }
         case RESET:
             return { ...state, items: {}, datos: [], msg: null, status: null, 
             rows: null, page: null, totalPage: null}

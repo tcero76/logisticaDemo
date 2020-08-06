@@ -65,6 +65,7 @@ class Ubicar extends Component {
             this.setState({ ...this.state, ors: res.data});
         })
     }
+    
     renderConfirmacion() {
         return (<div className="modal fade" tabIndex="-1" role="dialog">
                     <div className="modal-dialog" role="document">
@@ -92,7 +93,8 @@ class Ubicar extends Component {
         var alpha = idNode.replace(/[^a-zA-Z]/gi,'');
         var num = parseInt(idNode.replace(/[^0-9]/gi,''));
         if(alpha==='idAlmacen')
-          this.setState({valueNombre: this.props.almacen, nameNombre:idNode})
+          this.setState({valueNombre: this.props.almacen,
+            nameNombre:idNode})
         else {
           var pos = this.almacenTreeView.current.findField(ubicaciones, num, alpha);
           if(pos!= null && !pos.hasOwnProperty('niveles') && !pos.hasOwnProperty('poses')){

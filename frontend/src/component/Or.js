@@ -21,13 +21,14 @@ class Or extends React.Component {
         alert:false,
         touched:{cantidad: false, guiadedespacho: false},
         error: {cantidad: null, guiadedespacho: null},
-        errorResponse: null,
+        msg: null,status: null, HideMsg: true
         }
 
     saveOrec() {
+        var oritems = Object.values(this.state.oritems);
         api().post('/ors', {
             guiadespacho: this.state.guiadespacho,
-            oritems: this.state.oritems.map(oi =>{
+            oritems: oritems.map(oi =>{
                 return {
                     idmaterial: oi.material.idmaterial,
                     cantidad: oi.cantidad,
@@ -36,15 +37,15 @@ class Or extends React.Component {
             })
         })
         .then(res => {
-            this.setState({ ...this.state, oritems: res.data});
+            this.setState({ ...this.state, oritems: res.data,
+            msg: "Or almacenda con id: " + res.data, status: res.status });
         }).catch(e => {
-            this.setState({ ...this.state, errorResponse: e.response});
+            this.setState({ ...this.state, msg: e.response});
         })
     }
     
     renderTableRow() {
         var oritems = Object.values(this.state.oritems);
-        console.log(oritems);
         return oritems.sort((oi1,oi2) => oi1.pos-oi2.pos).map(fila => {
             return (
                 <tr key={fila.material.idmaterial}>
@@ -258,6 +259,9 @@ class Or extends React.Component {
             <IntlProvider locale={navigator.language} {...intlData}>
                 <div className="container">
                     <h1 className="mb-3">Recepción Ors</h1>
+                    <Msg msg={this.state.msg}
+                        status={this.state.status} 
+                        HideMsg={this.state.HideMsg}/>
                     <div className="card mb-4 card__component">
                         <div className="card-body">
                             {this.renderForm()}

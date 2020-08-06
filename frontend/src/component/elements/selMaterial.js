@@ -111,13 +111,20 @@ class SelMaterial extends Component {
                 this.insertBadge(seleccion);
             }
         }
+        if(e.key==='Tab'){
+            if(this.state.lista.length>0) {
+                var seleccion = this.state.lista[this.state.cursor].ref;
+                this.setState({seleccionado: seleccion});
+                this.insertBadge(seleccion);
+            }
+        }
         if(this.state.lista.length-1>this.state.cursor && e.key==='ArrowDown'){
             this.setState({cursor: this.state.cursor+1});
         }
         if(this.state.cursor>0 && e.key==='ArrowUp'){
             this.setState({cursor: this.state.cursor-1});
         }
-        if(this.state.seleccionado && e.key!=='Enter' &&
+        if(this.state.seleccionado && e.key!=='Enter' && e.key!=='Tab' &&
             e.key!=='ArrowUp' && e.key!=='ArrowDown') {
             this.state.cursor=0;
             while(this.seleccionadoText.firstChild) {

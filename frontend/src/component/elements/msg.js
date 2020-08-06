@@ -13,7 +13,6 @@ class Msg extends Component {
         this.statusTimeout = setTimeout(this.resetStatetusMsg,2500);
     }
 
-
     render() {
         if(!this.props.msg || this.props.Hide || this.state.Hide) {
             this.state.Hide = false;
@@ -50,13 +49,6 @@ class Msg extends Component {
                     <p>{msg}</p>
                 </div>)
     }
-}
-
-const mapStateToProps = state => {
-    return { 
-            msg: state.api.msg, 
-            status: state.api.status, 
-        }
 }
 
 export default Msg;
