@@ -35,6 +35,7 @@ target/
 /backend/target
 /database/**
 /gimp/**
+Android/
 
 ### STS ###
 .apt_generated
