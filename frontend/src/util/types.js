@@ -3,14 +3,5 @@ export const ACCESS_TOKEN = 'accessToken';
 export const CURRENT_USER = 'CURRENT_USER';
 export const CURRENT_NAV = 'CURRENT_NAV';
 export const LOGOUT = 'LOGOUT';
-export const POST = 'POST';
-export const UPDATE_ZONAS = 'UPDATE_ZONAS';
-export const FETCH_PAGINABLE = 'FETCH_PAGINABLE';
-export const FETCH_ZONA = 'FETCH_ZONA';
-export const FETCH_ZONA_DETAIL = 'FETCH_ZONA_DETAIL';
-export const SEND_CUENTAITEM = 'SEND_CUENTAITEM';
 export const ERROR_RESPONSE = 'ERROR_RESPONSE';
-export const FETCH_DATA = 'FETCH_DATA';
-export const FETCH_DATA_LIST = 'FETCH_DATA_LIST';
-export const RESET = 'RESET';
-export const FETCH_UBICACIONES = 'FETCH_UBICACIONES';
+

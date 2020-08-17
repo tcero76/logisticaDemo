@@ -1,4 +1,11 @@
 package com.tcero.recepcion.payload
 
-class reqMateriales {
+class reqOr {
+
+    var idmaterial:Int?=null
+
+    var guiadedespacho:String?=null
+
+    var cantidad:Double?=null
+
 }

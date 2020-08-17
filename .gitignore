@@ -34,6 +34,7 @@ target/
 /frontend/node_modules
 /backend/target
 /database/**
+/gimp/**
 
 ### STS ###
 .apt_generated

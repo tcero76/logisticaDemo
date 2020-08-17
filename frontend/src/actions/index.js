@@ -4,16 +4,7 @@ import {
     CURRENT_USER,
     CURRENT_NAV,
     LOGOUT,
-    POST,
-    FETCH_UBICACIONES,
-    FETCH_DATA,
-    FETCH_DATA_LIST,
-    FETCH_PAGINABLE,
-    FETCH_ZONA,
-    FETCH_ZONA_DETAIL,
-    SEND_CUENTAITEM,
     ERROR_RESPONSE,
-    RESET,
 } from '../util/types';
 import history from '../util/history';
 import api from '../util/api';

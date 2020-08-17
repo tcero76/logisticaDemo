@@ -2,7 +2,7 @@
 <Configuration status="INFO">
     <Appenders>
         <Console name="LogToConsole" target="SYSTEM_OUT">
-            <PatternLayout pattern="%style{%d{HH:mm:ss}}{red} %highlight{ %t %x %-5level %c{1.}: %msg%n%throwable}{FATAL=white, ERROR=red, WARN=Yellow, INFO=blue, DEBUG=green, TRACE=Yellow}"/>
+            <PatternLayout pattern="%style{%d{dd-mm-yyyy HH:mm:ss}}{red} %highlight{ %t %x %-5level %c{1.}: %msg%n%throwable}{FATAL=white, ERROR=red, WARN=Yellow, INFO=blue, DEBUG=green, TRACE=Yellow}"/>
         </Console>
         <File name="LogToFile" fileName="/target/logs/app.log">
             <PatternLayout>
