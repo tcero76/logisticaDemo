@@ -3,7 +3,15 @@ package com.logistica.demo.payload;
 import javax.validation.constraints.NotNull;
 
 public class LoginRequest {
-	
+
+	public LoginRequest() {
+	}
+
+	public LoginRequest(String usuario, String clave) {
+		this.usuario = usuario;
+		this.clave = clave;
+	}
+
 	@NotNull
 	private String usuario;
 

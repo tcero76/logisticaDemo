@@ -33,8 +33,8 @@ target/
 #deploy
 /frontend/node_modules
 /backend/target
-/database/**
-/gimp/**
+database/
+gimp/
 Android/
 
 ### STS ###

@@ -4,7 +4,7 @@ services:
     restart: always
     volumes:
       - ./database/mysql:/var/lib/mysql
-      - ./database/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+      # - ./database/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
     image: mysql:5.7
     ports:
        - "3306:3306"
@@ -31,11 +31,13 @@ services:
       - db # This service depends on mysql. Start that first.
     environment: # Pass environment variables to the service 
       TZ: America/Santiago
-      MYSQL_DATABASE: logistica  
-      MYSQL_HOST: db
-      MYSQL_PASS: Waves6_
-      MYSQL_PORT: '3306'
-      MYSQL_USER: tcero
+      DATABASE: logistica  
+      HOST: db
+      PASS: Waves6_
+      PORT: '3306'
+      USER: tcero
+      PROTOCOL: mysql
+      DRIVER: com.mysql.jdbc.Driver
     networks: # Networks to join (Services on the same network can communicate with each other using their name)
       - backend
       - frontend

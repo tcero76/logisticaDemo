@@ -1,20 +1,20 @@
 package com.logistica.demo.payload;
 
 public class ApiResponse {
-    private boolean confirmacon;
+    private boolean confirmacion;
     private String message;
 
     public ApiResponse(boolean confirmacion, String message) {
-        this.confirmacon = confirmacion;
+        this.confirmacion = confirmacion;
         this.message = message;
     }
 
-    public boolean isConfirmacon() {
-        return confirmacon;
+    public boolean isConfirmacion() {
+        return confirmacion;
     }
 
-    public void setConfirmacon(boolean confirmacon) {
-        this.confirmacon = confirmacon;
+    public void setConfirmacion(boolean confirmacion) {
+        this.confirmacion = confirmacion;
     }
 
     public String getMessage() {

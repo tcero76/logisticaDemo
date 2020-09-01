@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -23,19 +24,25 @@ public class JpaConfig {
 
     private static final Logger log = LoggerFactory.getLogger(JpaConfig.class);
 
-    @Value("${MYSQL_HOST}")
+    @Value("${HOST}")
     private String host;
 
-    @Value("${MYSQL_PORT}")
+    @Value("${PORT}")
     private String port;
 
-    @Value("${MYSQL_DATABASE}")
+    @Value("${DATABASE}")
     private String database;
 
-    @Value("${MYSQL_USER}")
+    @Value("${DRIVER}")
+    private String driver;
+
+    @Value("${PROTOCOL}")
+    private String protocol;
+
+    @Value("${USER}")
     private String user;
 
-    @Value("${MYSQL_PASS}")
+    @Value("${PASS}")
     private String pass;
 
     @Bean
@@ -65,7 +72,8 @@ public class JpaConfig {
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setUrl("jdbc:mysql://"+host+":"+port+"/"+database);
+        String urlDatasource = protocol.equals("h2")?"jdbc:h2:mem:"+database:"jdbc:" + protocol + "://"+host+":"+port+"/"+database;
+        dataSource.setUrl(urlDatasource);
         dataSource.setUsername(user);
         dataSource.setPassword(pass);
         return dataSource;
@@ -74,7 +82,7 @@ public class JpaConfig {
     private Properties jpaProperties() {
         Properties properties = new Properties();
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5InnoDBDialect");
-        properties.setProperty("spring.datasource.driver-class-name","com.mysql.jdbc.Driver");
+        properties.setProperty("spring.datasource.driver-class-name",driver);
 //        properties.setProperty("hibernate.show_sql","true");
 //        properties.setProperty("hibernate.generate_statistics","true");
 //        properties.setProperty("org.hibernate.engine.internal.StatisticalLoggingSessionEventListener","info");
