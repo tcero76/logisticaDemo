@@ -25,7 +25,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.sql.SQLException;
 import java.util.Collections;
-import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
@@ -72,7 +71,6 @@ public class CuentaTest {
     @Test
     public void postCuenta() throws JSONException {
         ReqCuenta reqCuenta = new ReqCuenta(1);
-
         HttpEntity<ReqCuenta> httpEntity = new HttpEntity<>(reqCuenta, headers);
         ResponseEntity<String> response = this.restTemplate
                 .exchange("/cuentas",HttpMethod.POST, httpEntity,String.class);
@@ -85,6 +83,5 @@ public class CuentaTest {
                         String.class);
         JSONAssert.assertEquals(json, new JSONArray(resultado.getBody()),false);
         log.info(resultado.getBody());
-
     }
 }
