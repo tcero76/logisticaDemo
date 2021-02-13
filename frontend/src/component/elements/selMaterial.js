@@ -13,7 +13,7 @@ class SelMaterial extends Component {
         .then(res => {
             this.setState({...this.state, materiales: res.data });
         });
-            this.seleccionadoText = document.getElementById("seleccion");
+        this.seleccionadoText = document.getElementById("seleccion");
         }
 
     componentDidUpdate() {
@@ -44,7 +44,7 @@ class SelMaterial extends Component {
                 </div>
                 <div contentEditable="true"
                     id="seleccion"
-                    onFocus={e => this.onFocusMaterial()}
+                    onFocus={e => this.onFocusMaterial(e)}
                     onBlur={e => this.onBlurMaterial()}
                     onKeyUp={e => this.onKeyUpMaterialb(e)}
                     onKeyDown={e => this.onKeyDownMaterial(e)}
@@ -154,8 +154,8 @@ class SelMaterial extends Component {
     }
 
     onFocusMaterial(e) {
-        while (this.seleccionadoText.firstChild) {
-            this.seleccionadoText.removeChild(this.seleccionadoText.lastChild);
+        while (e.target.firstChild) {
+            e.target.removeChild(this.seleccionadoText.lastChild);
         }
         this.setState({lista: this.idx.search('*'), seleccionado: null});
         this.props.value({idmaterial: null});

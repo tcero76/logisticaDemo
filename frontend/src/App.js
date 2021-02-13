@@ -2,6 +2,7 @@ import React from 'react';
 import Header from './component/header';
 import { Router, Route } from 'react-router-dom';
 import history from './util/history';
+
 import Or from './component/Or';
 import Ubicar from './component/ubicar';
 import Login from './component/login';
@@ -9,13 +10,14 @@ import despacho from './component/despacho';
 import almacen from './component/almacen';
 import usuario from './component/usuario';
 import movmat from './component/movmat';
-import { connect } from 'react-redux'
-import { Redirect } from 'react-router-dom'
-import { currentUser, logout } from './actions/';
 import Cuenta from './component/cuenta';
 import CuentaItem from './component/cuentaitem';
 import CuentaCuadrar from './component/cuentacuadrar';
 import StatusBar from './component/elements/statusBar'
+
+import { connect } from 'react-redux'
+import { Redirect } from 'react-router-dom'
+import { currentUser, logout } from './actions/';
 
 import './scss/style.scss';
 

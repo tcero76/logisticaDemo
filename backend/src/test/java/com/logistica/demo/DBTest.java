@@ -20,8 +20,8 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = LogisticaBackApplication.class)
+//@RunWith(SpringRunner.class)
+//@SpringBootTest(classes = LogisticaBackApplication.class)
  public class DBTest {
 
     private static final Logger log = LoggerFactory.getLogger(DBTest.class);
@@ -53,7 +53,6 @@ import static org.junit.Assert.assertTrue;
     @Autowired
     private OditemRepo oditemRepo;
 
-    @Test
     public void countCuentaItemByCuenta() {
         Integer idcuenta = 1;
         Long countCuenta = cuentaItemService.countByCuenta(idcuenta);

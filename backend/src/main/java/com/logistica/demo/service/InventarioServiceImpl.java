@@ -9,6 +9,7 @@ import com.logistica.demo.payload.CuadrarInventarioReq;
 import com.logistica.demo.payload.ResCuentaCuadratura;
 import com.logistica.demo.payload.UbicacionReq;
 import com.logistica.demo.repository.*;
+import com.logistica.demo.util.StatusCuentaItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -109,7 +110,7 @@ public class InventarioServiceImpl implements InventarioService {
                 .orElseThrow(() -> new NotFoundException("idcuenta", "Cuentaitem", cuadrarCuentaReq.getIdcuentaitem()));
         Optional<Integer> idInventario = inventarioDao.ultInventario(cuentaitem.getMaterial().getIdmaterial(), cuentaitem.getPos().getIdpos());
         Inventario inventario = null;
-        cuentaitem.setStatus("realizado");
+        cuentaitem.setStatus(StatusCuentaItem.CONFIRMADO);
         if(idInventario.isPresent()) {
             Inventario inventarioAnt = inventarioRepo.findById(idInventario.get()).get();
             inventario = new Inventario(cuentaitem.getMaterial(),
@@ -161,7 +162,7 @@ public class InventarioServiceImpl implements InventarioService {
                 .orElseThrow(() -> new NotFoundException("idinventario","Inventario", cuadrarCuentaReq.getIdinventario()));
 
         Cuentaitem cuentaitem = new Cuentaitem(inventario.getMaterial(), inventario.getCantidadtotal(),
-                "realizado", inventario.getPos(), usuario, cuenta, inventario);
+                StatusCuentaItem.CONFIRMADO, inventario.getPos(), usuario, cuenta, inventario);
         cuentaitemRepo.save(cuentaitem);
 
         return findCuadratura(cuadrarCuentaReq.getIdcuenta());

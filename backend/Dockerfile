@@ -8,7 +8,16 @@ COPY backend/pom.xml /build/pom.xml
 RUN ./mvnw dependency:resolve
 COPY backend/src/ /build/src/
 #Enpaquetar el proyecto, saltándose los tests.
-RUN ./mvnw package -DskipTests
+ARG DATABASE=logistica
+ARG DRIVER=org.h2.Driver
+ARG USER=sa
+ARG PASS=sa
+ARG HOST=mem
+ARG PROTOCOL=h2
+ARG PORT=0
+ARG TEST=true
+RUN ./mvnw -DDATABASE=$DATABASE -DDRIVER=$DRIVER -DUSER=$USER -DPASS=$PASS -DHOST=$HOST -DPROTOCOL=$PROTOCOL -DPORT=$PORT -DTEST=$TEST package
+#-DskipTests
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
 FROM openjdk:8-jre-alpine

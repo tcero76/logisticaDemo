@@ -22,7 +22,7 @@ public class CuentaDaoImpl implements CuentaDao {
         String jpql = "select c from Cuenta c " +
                 "where c.status = :status";
         return em.createQuery(jpql)
-                .setParameter("status", "pendiente")
+                .setParameter("status", "PENDIENTE")
                 .getResultList();
     }
 

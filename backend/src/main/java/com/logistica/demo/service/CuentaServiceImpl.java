@@ -44,11 +44,11 @@ public class CuentaServiceImpl implements CuentaService {
     public Cuenta addCuenta(Integer idzona, Usuario usuario) {
         Zona zona = zonaRepo.findById(idzona)
                 .orElseThrow(() -> new NotFoundException("idzona", "Zona", idzona));
-        cuentaRepo.findByZonaAndStatus(zona,"pendiente")
+        cuentaRepo.findByZonaAndStatus(zona,"PENDIENTE")
                 .ifPresent(cuenta -> {
                     throw new BadRequestException(cuenta);
                 });
-        Cuenta cuenta = new Cuenta(new Date(), "pendiente", usuario, zona, null);
+        Cuenta cuenta = new Cuenta(new Date(), "PENDIENTE", usuario, zona, null);
         return cuentaRepo.save(cuenta);
     }
 }

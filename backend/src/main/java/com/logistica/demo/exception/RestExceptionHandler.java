@@ -27,13 +27,6 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ExceptionRes> RestException(BadCredentialsException ex) {
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(new ExceptionRes(new Date(),HttpStatus.UNAUTHORIZED.toString(),"Credenciales Incorrectas"));
-    }
-
-    @ExceptionHandler
     public ResponseEntity<ExceptionRes> RestException(Exception ex) {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -44,7 +37,7 @@ public class RestExceptionHandler {
     public ResponseEntity<ExceptionRes> ResException(InternalAuthenticationServiceException ex){
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
-                .body(new ExceptionRes(new Date(), HttpStatus.UNAUTHORIZED.toString(), "Credenciales Incorrectas"));
+                .body(new ExceptionRes(new Date(), HttpStatus.UNAUTHORIZED.toString(), ex.getMessage()));
     }
 
     @ExceptionHandler
@@ -52,5 +45,13 @@ public class RestExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(new ExceptionRes(new Date(), HttpStatus.UNAUTHORIZED.toString(), ex.toString()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ExceptionRes> RestException(BadCredentialsException ex) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(new ExceptionRes(new Date(),HttpStatus.UNAUTHORIZED.toString(),
+                        "Credenciales Incorrectas"));
     }
 }

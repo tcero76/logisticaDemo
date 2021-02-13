@@ -104,7 +104,9 @@ class Or extends React.Component {
     }
 
     onChangeCantidad(e) {
-        this.setState({ ...this.state, cantidad: parseFloat(e.target.value.replace(',','.'))});
+        this.setState({ ...this.state,
+            cantidad: parseFloat(e.target.value.replace(',','.'))
+        });
         this.testError(e);
     }
 

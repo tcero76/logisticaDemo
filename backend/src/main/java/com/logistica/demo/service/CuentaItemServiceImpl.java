@@ -8,6 +8,7 @@ import com.logistica.demo.repository.CuentaItemRepo;
 import com.logistica.demo.repository.CuentaRepo;
 import com.logistica.demo.repository.MaterialRepo;
 import com.logistica.demo.repository.PosRepo;
+import com.logistica.demo.util.StatusCuentaItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +67,7 @@ public class CuentaItemServiceImpl implements CuentaItemService {
 
         Cuentaitem cuentaitem = null;
         if(cuentaitems.size()==0) {
-            cuentaitem = new Cuentaitem(material, reqCuentaItem.getCantidad(),"pendiente",pos,
+            cuentaitem = new Cuentaitem(material, reqCuentaItem.getCantidad(), StatusCuentaItem.PENDIENTE,pos,
                     usuario, cuenta, null);
         } else {
             cuentaitems.get(0).setCantidad(reqCuentaItem.getCantidad());

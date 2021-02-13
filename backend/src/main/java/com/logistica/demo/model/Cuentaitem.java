@@ -1,6 +1,7 @@
 package com.logistica.demo.model;
 
 import com.logistica.demo.payload.ReqCuentaItem;
+import com.logistica.demo.util.StatusCuentaItem;
 
 import javax.persistence.*;
 
@@ -11,7 +12,7 @@ public class Cuentaitem {
     public Cuentaitem() {
     }
 
-    public Cuentaitem(Material material, Double cantidad, String status, Pos pos, Usuario usuario, Cuenta cuenta, Inventario inventario) {
+    public Cuentaitem(Material material, Double cantidad, StatusCuentaItem status, Pos pos, Usuario usuario, Cuenta cuenta, Inventario inventario) {
         this.material = material;
         this.cantidad = cantidad;
         this.status = status;
@@ -25,7 +26,7 @@ public class Cuentaitem {
         this.material = new Material(reqCuentaItem.getIdmaterial());
         this.cantidad = reqCuentaItem.getCantidad();
         this.usuario = usuario;
-        this.status = "pendiente";
+        this.status = StatusCuentaItem.PENDIENTE;
         this.pos = new Pos(reqCuentaItem.getIdpos());
         this.cuenta = new Cuenta(reqCuentaItem.getIdcuenta());
     }
@@ -42,7 +43,8 @@ public class Cuentaitem {
     private Double cantidad;
 
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private StatusCuentaItem status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idpos")
@@ -59,11 +61,11 @@ public class Cuentaitem {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "cuentaitem")
     private Inventario inventario;
 
-    public String getStatus() {
+    public StatusCuentaItem getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusCuentaItem status) {
         this.status = status;
     }
 

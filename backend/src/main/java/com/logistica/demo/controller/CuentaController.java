@@ -66,7 +66,6 @@ public class CuentaController {
                     .collect(Collectors.toList());
             return ResponseEntity.created(location)
                     .body(resCuentas);
-
     }
 
 }

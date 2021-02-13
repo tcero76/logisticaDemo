@@ -2,14 +2,14 @@ sudo: required
 
 services:
   - docker
-# before_install:
+before_install:
 #   - docker build -t tcero76/backend -f backend/Dockerfile .
 #   - docker build -t tcero76/fronted -f frontend/Dockerfile .
+  - docker run -e CI=true tcero76/frontend npm test -- --coverage
 script:
-#   - docker run -e "MYSQL_HOST=$AWS_IP" -e "MYSQL_USER=$MYSQL_USER" -e "MYSQL_PASS=$MYSQL_PASS" tcero76/test 
-# after_success:
   - docker build -t tcero76/backend -f backend/Dockerfile .
   - docker build -t tcero76/frontend -f frontend/Dockerfile .
+after_success:
   - docker login -u $DOCKER_ID -p $DOCKER_PASSWORD
   - docker push tcero76/backend
   - docker push tcero76/frontend
